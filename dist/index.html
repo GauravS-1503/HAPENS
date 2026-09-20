@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b615e" />
+    <meta
+      name="description"
+      content="HAPENS mobile dashboard prototype for cancer patient enrolment, appointments, reports, payments, and hospital navigation."
+    />
+    <title>HAPENS Patient Dashboard</title>
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" type="image/png" href="./logo.png" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-frame">
+      <header class="topbar" aria-label="HAPENS header">
+        <div class="brand-lockup">
+          <img class="brand-logo" src="./logo.png" alt="HAPENS logo" />
+          <div>
+            <p class="eyebrow">HAPENS</p>
+            <h1 data-i18n="appName">Healthcare Associated Patient Enrolment and Navigation System</h1>
+          </div>
+        </div>
+        <label class="language-control" for="language">
+          <span data-i18n="language">Language</span>
+          <select id="language" aria-label="Select language">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="bn">বাংলা</option>
+            <option value="ta">தமிழ்</option>
+            <option value="te">తెలుగు</option>
+            <option value="mr">मराठी</option>
+          </select>
+        </label>
+      </header>
+
+      <main>
+        <section class="screen auth-screen active" id="login-screen" aria-labelledby="login-title">
+          <div class="auth-card">
+            <img class="auth-logo" src="./logo.png" alt="HAPENS logo" />
+            <div class="auth-copy">
+              <h2 id="login-title" data-i18n="loginTitle">Patient login</h2>
+              <p data-i18n="loginSubtitle">Use your hospital user ID to continue to appointments, reports, payments, and directions.</p>
+            </div>
+
+            <form id="login-form" class="form-grid">
+              <label>
+                <span data-i18n="userId">User ID</span>
+                <input id="user-id" name="user-id" type="text" autocomplete="username" placeholder="HAPENS12345" required />
+              </label>
+              <label>
+                <span data-i18n="password">Password</span>
+                <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required />
+              </label>
+              <button class="primary-btn" type="submit" data-i18n="login">Login</button>
+            </form>
+
+            <div class="split-action">
+              <span data-i18n="newPatient">New patient?</span>
+              <button class="text-btn" type="button" data-target="register-screen" data-i18n="registerNow">Register now</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" id="register-screen" aria-labelledby="register-title">
+          <button class="back-btn" type="button" data-target="login-screen" aria-label="Back to login">‹</button>
+          <div class="section-heading">
+            <p class="eyebrow" data-i18n="registration">Registration</p>
+            <h2 id="register-title" data-i18n="registerTitle">Create patient profile</h2>
+            <p data-i18n="registerSubtitle">Add basic details and upload the first set of documents for hospital enrolment.</p>
+          </div>
+
+          <form id="register-form" class="registration-panel">
+            <section class="form-section" aria-labelledby="document-heading">
+              <div class="form-section-title">
+                <span>1</span>
+                <div>
+                  <h3 id="document-heading">Documents to keep ready</h3>
+                  <p>Accepted formats: jpeg, jpg, png, bmp, or pdf where applicable.</p>
+                </div>
+              </div>
+              <div class="upload-grid" aria-label="Document uploads">
+                <label class="upload-tile">
+                  <span>Photo ID proof</span>
+                  <small>Driving license, voter ID, passport, or Aadhaar. Max 2 MB.</small>
+                  <input name="photo-id-proof" type="file" accept="image/*,.pdf" />
+                </label>
+                <label class="upload-tile">
+                  <span>Passport size photograph</span>
+                  <small>Jpeg, jpg, png, or bmp. 20 KB to 300 KB.</small>
+                  <input name="photograph" type="file" accept="image/*" />
+                </label>
+                <label class="upload-tile">
+                  <span>All scanned reports</span>
+                  <small>Upload previous investigation reports. Max 2 MB each.</small>
+                  <input name="scanned-reports" type="file" accept="image/*,.pdf" multiple />
+                </label>
+                <label class="upload-tile">
+                  <span>Prescription or referral letter</span>
+                  <small>Optional referral from doctor or hospital.</small>
+                  <input name="prescription" type="file" accept="image/*,.pdf" />
+                </label>
+              </div>
+            </section>
+
+            <section class="form-section" aria-labelledby="personal-heading">
+              <div class="form-section-title">
+                <span>2</span>
+                <div>
+                  <h3 id="personal-heading">Personal details</h3>
+                  <p>Patient identity and registration information.</p>
+                </div>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Nationality</span>
+                  <select name="nationality" required>
+                    <option value="">Select nationality</option>
+                    <option>Indian</option>
+                    <option>Foreign national</option>
+                    <option>NRI</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Initial</span>
+                  <select name="initial" required>
+                    <option value="">Select initial</option>
+                    <option>Mr.</option>
+                    <option>Mrs.</option>
+                    <option>Ms.</option>
+                    <option>Master</option>
+                    <option>Dr.</option>
+                  </select>
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>First name</span>
+                  <input name="first-name" type="text" placeholder="Asha" required />
+                </label>
+                <label>
+                  <span>Middle name</span>
+                  <input name="middle-name" type="text" placeholder="Ramesh" />
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Last name</span>
+                  <input name="last-name" type="text" placeholder="Sharma" required />
+                </label>
+                <label>
+                  <span>Gender</span>
+                  <select name="gender" required>
+                    <option value="">Select gender</option>
+                    <option>Female</option>
+                    <option>Male</option>
+                    <option>Other</option>
+                  </select>
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Date of birth</span>
+                  <input name="date-of-birth" type="date" required />
+                </label>
+                <label>
+                  <span>Mobile no.</span>
+                  <input name="mobile" type="tel" inputmode="tel" placeholder="+91 98765 43210" required />
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Alternate mobile no.</span>
+                  <input name="alternate-mobile" type="tel" inputmode="tel" placeholder="+91 91234 56789" />
+                </label>
+                <label>
+                  <span>Email ID</span>
+                  <input name="email" type="email" placeholder="patient@example.com" required />
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Aadhaar card no.</span>
+                  <input name="aadhaar-no" type="text" inputmode="numeric" placeholder="1234 5678 9012" />
+                </label>
+                <label>
+                  <span>PAN card no.</span>
+                  <input name="pan-no" type="text" placeholder="ABCDE1234F" />
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Ration card no.</span>
+                  <input name="ration-card-no" type="text" />
+                </label>
+                <label>
+                  <span>Ration card color</span>
+                  <select name="ration-card-color">
+                    <option value="">Select color</option>
+                    <option>White</option>
+                    <option>Yellow</option>
+                    <option>Orange</option>
+                    <option>Other</option>
+                  </select>
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Passport no.</span>
+                  <input name="passport-no" type="text" />
+                </label>
+                <label>
+                  <span>Passport expiry</span>
+                  <input name="passport-expiry" type="date" />
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Indian medical visa</span>
+                  <input name="medical-visa" type="text" />
+                </label>
+                <label>
+                  <span>Indian medical visa expiry</span>
+                  <input name="medical-visa-expiry" type="date" />
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Referred by doctor/hospital</span>
+                  <input name="referred-by" type="text" placeholder="Doctor or hospital name" />
+                </label>
+                <label>
+                  <span>Registration location</span>
+                  <select name="registration-location" required>
+                    <option value="">Select location</option>
+                    <option>Tata Memorial Hospital, Mumbai</option>
+                    <option>ACTREC, Navi Mumbai</option>
+                    <option>HAPENS Cancer Centre</option>
+                  </select>
+                </label>
+              </div>
+            </section>
+
+            <section class="form-section" aria-labelledby="address-heading">
+              <div class="form-section-title">
+                <span>3</span>
+                <div>
+                  <h3 id="address-heading">Address</h3>
+                  <p>Permanent and correspondence address details.</p>
+                </div>
+              </div>
+              <h4>Permanent address</h4>
+              <label>
+                <span>Address</span>
+                <textarea name="permanent-address" rows="3" placeholder="House no., street, locality" required></textarea>
+              </label>
+              <div class="field-pair">
+                <label>
+                  <span>Village / City / Town</span>
+                  <input name="permanent-city" type="text" required />
+                </label>
+                <label>
+                  <span>Country</span>
+                  <select name="permanent-country" required>
+                    <option>India</option>
+                    <option>Other</option>
+                  </select>
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>State</span>
+                  <input name="permanent-state" type="text" required />
+                </label>
+                <label>
+                  <span>District</span>
+                  <input name="permanent-district" type="text" required />
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Pincode</span>
+                  <input name="permanent-pincode" type="text" inputmode="numeric" />
+                </label>
+                <label>
+                  <span>Nearest railway station</span>
+                  <input name="nearest-railway" type="text" />
+                </label>
+              </div>
+              <label>
+                <span>Nearest airport</span>
+                <input name="nearest-airport" type="text" />
+              </label>
+
+              <div class="subsection-title">
+                <h4>Correspondence address</h4>
+                <label class="checkbox-row">
+                  <input id="same-correspondence" type="checkbox" />
+                  <span>Same as permanent address</span>
+                </label>
+              </div>
+              <label>
+                <span>Address</span>
+                <textarea name="correspondence-address" rows="3" required></textarea>
+              </label>
+              <div class="field-pair">
+                <label>
+                  <span>Village / City / Town</span>
+                  <input name="correspondence-city" type="text" required />
+                </label>
+                <label>
+                  <span>Country</span>
+                  <select name="correspondence-country" required>
+                    <option>India</option>
+                    <option>Other</option>
+                  </select>
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>State</span>
+                  <input name="correspondence-state" type="text" required />
+                </label>
+                <label>
+                  <span>District</span>
+                  <input name="correspondence-district" type="text" required />
+                </label>
+              </div>
+              <label>
+                <span>Pincode</span>
+                <input name="correspondence-pincode" type="text" inputmode="numeric" />
+              </label>
+            </section>
+
+            <section class="form-section" aria-labelledby="nominee-heading">
+              <div class="form-section-title">
+                <span>4</span>
+                <div>
+                  <h3 id="nominee-heading">Nominee details</h3>
+                  <p>Nominee will be responsible for financial transactions in the absence of the patient.</p>
+                </div>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Nominee name</span>
+                  <input name="nominee-name" type="text" required />
+                </label>
+                <label>
+                  <span>Nominee relationship</span>
+                  <select name="nominee-relationship" required>
+                    <option value="">Select relationship</option>
+                    <option>Spouse</option>
+                    <option>Parent</option>
+                    <option>Child</option>
+                    <option>Sibling</option>
+                    <option>Relative</option>
+                    <option>Other</option>
+                  </select>
+                </label>
+              </div>
+              <div class="inline-actions">
+                <label class="checkbox-row">
+                  <input id="nominee-same-permanent" type="checkbox" />
+                  <span>Same as permanent address</span>
+                </label>
+                <label class="checkbox-row">
+                  <input id="nominee-same-correspondence" type="checkbox" />
+                  <span>Same as correspondence address</span>
+                </label>
+              </div>
+              <label>
+                <span>Address</span>
+                <textarea name="nominee-address" rows="3" required></textarea>
+              </label>
+              <div class="field-pair">
+                <label>
+                  <span>Village / City / Town</span>
+                  <input name="nominee-city" type="text" required />
+                </label>
+                <label>
+                  <span>Country</span>
+                  <select name="nominee-country" required>
+                    <option>India</option>
+                    <option>Other</option>
+                  </select>
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>State</span>
+                  <input name="nominee-state" type="text" required />
+                </label>
+                <label>
+                  <span>District</span>
+                  <input name="nominee-district" type="text" required />
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Pincode</span>
+                  <input name="nominee-pincode" type="text" inputmode="numeric" />
+                </label>
+                <label>
+                  <span>Mobile no.</span>
+                  <input name="nominee-mobile" type="tel" inputmode="tel" required />
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Email ID</span>
+                  <input name="nominee-email" type="email" />
+                </label>
+                <label>
+                  <span>Passport no.</span>
+                  <input name="nominee-passport-no" type="text" />
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Passport expiry</span>
+                  <input name="nominee-passport-expiry" type="date" />
+                </label>
+                <label>
+                  <span>Indian medical visa</span>
+                  <input name="nominee-medical-visa" type="text" />
+                </label>
+              </div>
+              <label>
+                <span>Visa expiry</span>
+                <input name="nominee-visa-expiry" type="date" />
+              </label>
+            </section>
+
+            <section class="form-section" aria-labelledby="attendant-heading">
+              <div class="form-section-title">
+                <span>5</span>
+                <div>
+                  <h3 id="attendant-heading">Attendant details</h3>
+                  <p>Details of the person accompanying the patient.</p>
+                </div>
+              </div>
+              <label>
+                <span>Attendant name</span>
+                <input name="attendant-name" type="text" required />
+              </label>
+              <div class="field-pair">
+                <label>
+                  <span>Passport no.</span>
+                  <input name="attendant-passport-no" type="text" />
+                </label>
+                <label>
+                  <span>Passport expiry</span>
+                  <input name="attendant-passport-expiry" type="date" />
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Indian medical visa</span>
+                  <input name="attendant-medical-visa" type="text" />
+                </label>
+                <label>
+                  <span>Visa expiry</span>
+                  <input name="attendant-visa-expiry" type="date" />
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Mobile no.</span>
+                  <input name="attendant-mobile" type="tel" inputmode="tel" required />
+                </label>
+                <label>
+                  <span>Email ID</span>
+                  <input name="attendant-email" type="email" required />
+                </label>
+              </div>
+            </section>
+
+            <section class="form-section" aria-labelledby="verification-heading">
+              <div class="form-section-title">
+                <span>6</span>
+                <div>
+                  <h3 id="verification-heading">Verification</h3>
+                  <p>Final confirmation before submitting the registration.</p>
+                </div>
+              </div>
+              <label>
+                <span>Enter verification code</span>
+                <input name="verification-code" type="text" inputmode="numeric" placeholder="Enter code" required />
+              </label>
+              <label class="declaration-card">
+                <input name="declaration" type="checkbox" required />
+                <span>I hereby declare that the above particulars of facts and information stated are true, correct and complete to the best of my belief and knowledge.</span>
+              </label>
+            </section>
+
+            <button class="primary-btn" type="submit" data-i18n="submitRegistration">Submit registration</button>
+          </form>
+        </section>
+
+        <section class="screen" id="dashboard-screen" aria-labelledby="dashboard-title">
+          <div class="patient-card">
+            <div>
+              <p class="eyebrow" data-i18n="welcomeBack">Welcome back</p>
+              <h2 id="dashboard-title">Asha Sharma</h2>
+              <p data-i18n="patientId">Patient ID: HAPENS12345</p>
+            </div>
+            <span class="badge" data-i18n="activeCase">Active case</span>
+          </div>
+
+          <div class="quick-actions" aria-label="Primary actions">
+            <button class="action-card" type="button" data-panel="appointment-panel">
+              <span class="action-icon">+</span>
+              <strong data-i18n="bookAppointment">Book appointment</strong>
+              <small data-i18n="bookAppointmentHint">Choose doctor, date, and department</small>
+            </button>
+            <button class="action-card" type="button" data-panel="report-panel">
+              <span class="action-icon">≡</span>
+              <strong data-i18n="sampleStatus">Sample report status</strong>
+              <small data-i18n="sampleStatusHint">Track pathology and imaging updates</small>
+            </button>
+            <button class="action-card" type="button" data-panel="payment-panel">
+              <span class="action-icon">₹</span>
+              <strong data-i18n="payments">Payments</strong>
+              <small data-i18n="paymentsHint">View dues and pay online</small>
+            </button>
+            <button class="action-card" type="button" data-panel="navigation-panel">
+              <span class="action-icon">⌖</span>
+              <strong data-i18n="hospitalMap">Hospital navigation</strong>
+              <small data-i18n="hospitalMapHint">Find OPD, lab, billing, and pharmacy</small>
+            </button>
+          </div>
+
+          <div class="dashboard-panel active" id="appointment-panel">
+            <div class="panel-title-row">
+              <h3 data-i18n="appointments">Appointments</h3>
+              <button class="secondary-btn" type="button" data-i18n="reschedule">Reschedule</button>
+            </div>
+            <div class="timeline-item">
+              <span class="time-chip">10:30 AM</span>
+              <div>
+                <strong data-i18n="medicalOncology">Medical Oncology OPD</strong>
+                <p data-i18n="appointmentDetail">Dr. Meera Rao, Block B, Floor 2</p>
+              </div>
+            </div>
+            <form class="mini-form">
+              <select aria-label="Department">
+                <option data-i18n="selectDepartment">Select department</option>
+                <option>Medical Oncology</option>
+                <option>Radiation Oncology</option>
+                <option>Surgical Oncology</option>
+              </select>
+              <input type="date" aria-label="Appointment date" />
+              <button type="button" class="primary-btn" data-i18n="requestSlot">Request slot</button>
+            </form>
+          </div>
+
+          <div class="dashboard-panel" id="report-panel">
+            <h3 data-i18n="reportsStatus">Reports status</h3>
+            <div class="progress-list">
+              <div>
+                <span data-i18n="bloodSample">Blood sample</span>
+                <progress value="100" max="100"></progress>
+                <small data-i18n="readyForDoctor">Ready for doctor review</small>
+              </div>
+              <div>
+                <span data-i18n="biopsy">Biopsy report</span>
+                <progress value="65" max="100"></progress>
+                <small data-i18n="processing">Processing in pathology lab</small>
+              </div>
+              <div>
+                <span data-i18n="ctScan">CT scan</span>
+                <progress value="30" max="100"></progress>
+                <small data-i18n="scheduledToday">Scheduled today</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-panel" id="payment-panel">
+            <div class="panel-title-row">
+              <h3 data-i18n="paymentSummary">Payment summary</h3>
+              <span class="amount">₹2,450</span>
+            </div>
+            <p data-i18n="paymentCopy">Pending for lab tests and OPD registration. Receipts will be stored in your patient profile.</p>
+            <button class="primary-btn" type="button" data-i18n="payNow">Pay now</button>
+          </div>
+
+          <div class="dashboard-panel" id="navigation-panel">
+            <h3 data-i18n="navigationTitle">Hospital navigation</h3>
+            <div class="map-card" aria-label="Hospital department map">
+              <div class="map-node start" data-i18n="entrance">Entrance</div>
+              <div class="map-path"></div>
+              <div class="map-node" data-i18n="billing">Billing</div>
+              <div class="map-path"></div>
+              <div class="map-node target" data-i18n="opd">Oncology OPD</div>
+            </div>
+            <div class="route-list">
+              <span data-i18n="routeStep1">Enter through Gate 2</span>
+              <span data-i18n="routeStep2">Take lift to Floor 2</span>
+              <span data-i18n="routeStep3">Follow signs to Block B</span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>
