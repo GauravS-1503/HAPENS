@@ -2,6 +2,16 @@
 
 HAPENS is a mobile-first patient dashboard prototype for cancer hospital enrolment, appointments, sample report tracking, payments, and in-hospital navigation.
 
+## GitHub Pages
+
+GitHub Pages serves the prototype from the repository root through `index.html`.
+
+After pushing changes, open:
+
+```text
+https://gauravs-1503.github.io/HAPENS/
+```
+
 ## Run locally
 
 ```powershell

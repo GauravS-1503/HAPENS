@@ -1,0 +1,23 @@
+{
+  "name": "HAPENS Patient Dashboard",
+  "short_name": "HAPENS",
+  "description": "Cancer patient enrolment, appointments, reports, payments, and hospital navigation dashboard.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f5faf9",
+  "theme_color": "#0b615e",
+  "icons": [
+    {
+      "src": "./logo.png",
+      "sizes": "1254x1254",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
