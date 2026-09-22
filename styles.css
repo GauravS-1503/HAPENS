@@ -200,6 +200,11 @@ main {
   padding: 0.35rem 0.6rem;
 }
 
+.activation-pill.pending {
+  background: #fff4dc;
+  color: #8a4c07;
+}
+
 .qr-shell {
   display: grid;
   place-items: center;
@@ -587,7 +592,7 @@ label {
 
 .admin-card,
 .token-system-card,
-.schedule-card,
+.available-days-card,
 .slot-result {
   border: 1px solid rgba(217, 232, 229, 0.9);
   border-radius: 1rem;
@@ -603,7 +608,7 @@ label {
 
 .admin-card h3,
 .token-system-card h4,
-.schedule-card h4 {
+.available-days-card h4 {
   margin: 0;
 }
 
@@ -622,7 +627,8 @@ label {
 
 .registration-row small,
 .slot-result,
-.token-system-card p {
+.token-system-card p,
+.available-days-card p {
   color: var(--muted);
   line-height: 1.42;
 }
@@ -873,5 +879,61 @@ progress::-moz-progress-bar {
   .topbar h1 {
     max-width: 16rem;
     font-size: 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  main {
+    padding: 0.75rem;
+  }
+
+  .topbar {
+    align-items: flex-start;
+    padding: 0.9rem;
+  }
+
+  .brand-block {
+    gap: 0.6rem;
+  }
+
+  .brand-logo {
+    width: 2.7rem;
+    height: 2.7rem;
+  }
+
+  .topbar h1 {
+    max-width: 12.5rem;
+    font-size: 1rem;
+    line-height: 1.18;
+  }
+
+  .language-control {
+    width: 100%;
+  }
+
+  .language-control select {
+    width: 100%;
+  }
+
+  .quick-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-actions .action-card:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
+
+  .action-card {
+    min-height: auto;
+  }
+
+  .patient-card,
+  .panel-title-row {
+    display: grid;
+    justify-content: stretch;
+  }
+
+  .patient-status-stack {
+    justify-items: start;
   }
 }

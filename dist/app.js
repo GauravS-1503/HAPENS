@@ -25,7 +25,7 @@ const translations = {
     patientId: "Patient ID: HAPENS12345",
     activeCase: "Active case",
     bookAppointment: "Book appointment",
-    bookAppointmentHint: "Choose doctor, date, and department",
+    bookAppointmentHint: "Choose OPD day and department",
     sampleStatus: "Sample report status",
     sampleStatusHint: "Track pathology and imaging updates",
     payments: "Payments",
@@ -547,23 +547,33 @@ function slotText(value) {
   return "No OPD slot for this DMG and discipline on the selected day.";
 }
 
-function selectedWeekdayIndex(dateValue) {
-  const date = new Date(`${dateValue}T12:00:00`);
-  const index = date.getDay() - 1;
-  return index >= 0 && index <= 4 ? index : -1;
+function noteForDiscipline(note, discipline) {
+  if (!note) return "";
+  const segments = note.split(/(?=\b(?:SO|MO|RO)\b)/).map((segment) => segment.trim()).filter(Boolean);
+  return segments.filter((segment) => segment.startsWith(discipline)).join(" ");
 }
 
-function getSlot(category, dmg, discipline, dateValue) {
-  const dayIndex = selectedWeekdayIndex(dateValue);
-  if (dayIndex === -1) {
-    return { value: "no", day: "Weekend", text: "OPD scheduling is shown for Monday to Friday only." };
-  }
+function availableDayOptions(category, dmg, discipline) {
+  const group = opdSchedule[category]?.[dmg];
+  if (!group?.[discipline]) return [];
+  return group[discipline]
+    .map((value, index) => ({
+      index,
+      value,
+      day: weekdays[index],
+      label: `${weekdays[index]} - ${value === "half" ? "Half day" : "Full day"}`
+    }))
+    .filter((option) => option.value !== "no");
+}
+
+function getSlot(category, dmg, discipline, dayIndexValue) {
+  const dayIndex = Number(dayIndexValue);
   const group = opdSchedule[category]?.[dmg];
   const value = group?.[discipline]?.[dayIndex] || "no";
   return {
     value,
-    day: weekdays[dayIndex],
-    note: group?.note || "",
+    day: weekdays[dayIndex] || "Selected day",
+    note: noteForDiscipline(group?.note || "", discipline),
     text: slotText(value)
   };
 }
@@ -579,20 +589,35 @@ function populateDmgSelect(select, category = "Private") {
   }
 }
 
-function renderSchedule(category = "Private") {
-  const body = document.querySelector("#schedule-table-body");
-  if (!body) return;
-  body.innerHTML = Object.entries(opdSchedule[category])
-    .flatMap(([dmg, disciplines]) =>
-      ["SO", "MO", "RO"].map((discipline, index) => `
-        <tr>
-          <td>${index === 0 ? dmg : ""}</td>
-          <td>${discipline}</td>
-          ${disciplines[discipline].map((value) => `<td>${markFor(value)}</td>`).join("")}
-        </tr>
-      `)
-    )
-    .join("");
+function populateDaySelect(select, category, dmg, discipline) {
+  if (!select) return;
+  const options = availableDayOptions(category, dmg, discipline);
+  select.disabled = options.length === 0;
+  select.innerHTML = options.length
+    ? options.map((option) => `<option value="${option.index}">${option.label}</option>`).join("")
+    : '<option value="">No OPD day available</option>';
+}
+
+function resetSlotResult(target, message) {
+  if (!target) return;
+  target.className = "slot-result";
+  target.textContent = message;
+}
+
+function refreshPatientDays() {
+  const category = document.querySelector("#appointment-category").value;
+  const dmg = document.querySelector("#appointment-dmg").value;
+  const discipline = document.querySelector("#appointment-discipline").value;
+  populateDaySelect(document.querySelector("#appointment-day"), category, dmg, discipline);
+  resetSlotResult(document.querySelector("#patient-slot-result"), "Choose from the available OPD days shown above.");
+}
+
+function refreshAdminDays() {
+  const category = document.querySelector("#admin-category-select").value;
+  const dmg = document.querySelector("#admin-dmg-select").value;
+  const discipline = document.querySelector("#admin-discipline-select").value;
+  populateDaySelect(document.querySelector("#admin-day-select"), category, dmg, discipline);
+  resetSlotResult(document.querySelector("#admin-slot-result"), "Select a patient, DMG, discipline, and available OPD day.");
 }
 
 function renderCallingBoards() {
@@ -639,13 +664,12 @@ function populateAdminControls() {
   populateDmgSelect(dmgSelect, document.querySelector("#admin-category-select")?.value || "General");
 }
 
-function checkSlot({ category, dmg, discipline, dateValue, target, admin = false }) {
-  if (!dateValue) {
-    target.textContent = "Choose an appointment date to check availability.";
-    target.className = "slot-result";
+function checkSlot({ category, dmg, discipline, dayIndex, target, admin = false }) {
+  if (dayIndex === "") {
+    resetSlotResult(target, "Choose an available OPD day to check availability.");
     return;
   }
-  const result = getSlot(category, dmg, discipline, dateValue);
+  const result = getSlot(category, dmg, discipline, dayIndex);
   const tokenPrefix = discipline === "SO" ? "SE" : discipline === "MO" ? "ME" : "RO";
   target.className = `slot-result ${result.value === "no" ? "unavailable" : "available"}`;
   target.innerHTML = `
@@ -663,7 +687,7 @@ document.querySelectorAll("[data-target]").forEach((button) => {
 
 document.querySelector("#login-form").addEventListener("submit", (event) => {
   event.preventDefault();
-  showScreen("dashboard-screen");
+  showScreen("deposit-screen");
   showToast("loginToast");
 });
 
@@ -687,12 +711,13 @@ document.querySelector("[data-panel='appointment-panel']").classList.add("active
 
 document.querySelector("#confirm-deposit").addEventListener("click", () => {
   localStorage.setItem("hapens-deposit-active", "true");
-  showScreen("login-screen");
+  showScreen("dashboard-screen");
   showToast("payToast");
 });
 
 document.querySelector("#demo-skip-deposit").addEventListener("click", () => {
-  showScreen("login-screen");
+  localStorage.setItem("hapens-deposit-active", "true");
+  showScreen("dashboard-screen");
 });
 
 document.querySelector("#request-slot").addEventListener("click", () => {
@@ -700,7 +725,7 @@ document.querySelector("#request-slot").addEventListener("click", () => {
     category: document.querySelector("#appointment-category").value,
     dmg: document.querySelector("#appointment-dmg").value,
     discipline: document.querySelector("#appointment-discipline").value,
-    dateValue: document.querySelector("#appointment-date").value,
+    dayIndex: document.querySelector("#appointment-day").value,
     target: document.querySelector("#patient-slot-result")
   });
 });
@@ -709,12 +734,21 @@ document.querySelector("[data-i18n='payNow']").addEventListener("click", () => s
 
 document.querySelector("#appointment-category").addEventListener("change", (event) => {
   populateDmgSelect(document.querySelector("#appointment-dmg"), event.target.value);
-  renderSchedule(event.target.value);
+  refreshPatientDays();
 });
+
+document.querySelector("#appointment-dmg").addEventListener("change", refreshPatientDays);
+
+document.querySelector("#appointment-discipline").addEventListener("change", refreshPatientDays);
 
 document.querySelector("#admin-category-select").addEventListener("change", (event) => {
   populateDmgSelect(document.querySelector("#admin-dmg-select"), event.target.value);
+  refreshAdminDays();
 });
+
+document.querySelector("#admin-dmg-select").addEventListener("change", refreshAdminDays);
+
+document.querySelector("#admin-discipline-select").addEventListener("change", refreshAdminDays);
 
 document.querySelector("#admin-search").addEventListener("input", (event) => {
   renderRegistrations(event.target.value);
@@ -736,7 +770,7 @@ document.querySelector("#admin-book-slot").addEventListener("click", () => {
     category: document.querySelector("#admin-category-select").value,
     dmg: document.querySelector("#admin-dmg-select").value,
     discipline: document.querySelector("#admin-discipline-select").value,
-    dateValue: document.querySelector("#admin-appointment-date").value,
+    dayIndex: document.querySelector("#admin-day-select").value,
     target: document.querySelector("#admin-slot-result"),
     admin: true
   });
@@ -767,12 +801,9 @@ languageSelect.addEventListener("change", () => setLanguage(languageSelect.value
 populateDmgSelect(document.querySelector("#appointment-dmg"), "Private");
 populateDmgSelect(document.querySelector("#admin-dmg-select"), "General");
 populateAdminControls();
+refreshPatientDays();
+refreshAdminDays();
 renderRegistrations();
-renderSchedule("Private");
 renderCallingBoards();
-
-if (localStorage.getItem("hapens-deposit-active") === "true") {
-  showScreen("login-screen");
-}
 
 setLanguage(localStorage.getItem("hapens-language") || "en");

@@ -37,13 +37,13 @@
       </header>
 
       <main>
-        <section class="screen active" id="deposit-screen" aria-labelledby="deposit-title">
+        <section class="screen" id="deposit-screen" aria-labelledby="deposit-title">
           <div class="activation-card">
             <img class="auth-logo compact" src="./logo.png" alt="HAPENS logo" />
             <div class="auth-copy">
               <p class="eyebrow">Deposit activation</p>
-              <h2 id="deposit-title">Activate patient ID</h2>
-              <p>Scan the QR code and pay the refundable registration deposit. The patient login is enabled after payment confirmation.</p>
+              <h2 id="deposit-title">Complete deposit payment</h2>
+              <p>Scan the QR code after login and pay the refundable registration deposit. The patient ID activates after payment confirmation.</p>
             </div>
 
             <div class="qr-shell" aria-label="Deposit QR code for HAPENS demo payment">
@@ -65,15 +65,15 @@
             </div>
 
             <button class="primary-btn" id="confirm-deposit" type="button">I have paid the deposit</button>
-            <button class="text-btn center" id="demo-skip-deposit" type="button">Demo mode: continue without payment</button>
+            <button class="text-btn center" id="demo-skip-deposit" type="button">Demo mode: activate ID</button>
           </div>
         </section>
 
-        <section class="screen auth-screen" id="login-screen" aria-labelledby="login-title">
+        <section class="screen auth-screen active" id="login-screen" aria-labelledby="login-title">
           <div class="auth-card">
             <img class="auth-logo" src="./logo.png" alt="HAPENS logo" />
             <div class="auth-copy">
-              <span class="activation-pill">Patient ID active</span>
+              <span class="activation-pill pending">Deposit required after login</span>
               <h2 id="login-title" data-i18n="loginTitle">Patient login</h2>
               <p data-i18n="loginSubtitle">Use your hospital user ID to continue to appointments, reports, payments, and directions.</p>
             </div>
@@ -606,12 +606,12 @@
                   </select>
                 </label>
                 <label>
-                  <span>Appointment date</span>
-                  <input id="admin-appointment-date" type="date" />
+                  <span>Available OPD day</span>
+                  <select id="admin-day-select"></select>
                 </label>
               </div>
               <button class="primary-btn" id="admin-book-slot" type="button">Check and book slot</button>
-              <div class="slot-result" id="admin-slot-result">Select a patient, DMG, discipline, and date.</div>
+              <div class="slot-result" id="admin-slot-result">Select a patient, DMG, discipline, and available OPD day.</div>
             </div>
 
             <div class="admin-card">
@@ -641,7 +641,7 @@
             <button class="action-card" type="button" data-panel="appointment-panel">
               <span class="action-icon">+</span>
               <strong data-i18n="bookAppointment">Book appointment</strong>
-              <small data-i18n="bookAppointmentHint">Choose doctor, date, and department</small>
+              <small data-i18n="bookAppointmentHint">Choose OPD day and department</small>
             </button>
             <button class="action-card" type="button" data-panel="report-panel">
               <span class="action-icon">≡</span>
@@ -699,13 +699,13 @@
                 </select>
               </label>
               <label>
-                <span>Appointment date</span>
-                <input id="appointment-date" type="date" aria-label="Appointment date" />
+                <span>Available OPD day</span>
+                <select id="appointment-day" aria-label="Available OPD day"></select>
               </label>
               <button type="button" class="primary-btn" id="request-slot" data-i18n="requestSlot">Request slot</button>
             </form>
 
-            <div class="slot-result" id="patient-slot-result">Choose a date to check OPD availability.</div>
+            <div class="slot-result" id="patient-slot-result">Choose from the available OPD days shown above.</div>
 
             <div class="token-system-card">
               <h4>Appointment, token and calling rules</h4>
@@ -718,29 +718,12 @@
                 <span>RO</span>
               </div>
             </div>
-
-            <div class="schedule-card">
-              <h4>OPD timing matrix</h4>
+            <div class="available-days-card">
+              <h4>How days are selected</h4>
+              <p>The app filters OPD days using the selected category, disease management group, and discipline. Only valid full-day or half-day options are shown to the patient.</p>
               <div class="schedule-legend">
                 <span><b class="yes-mark">✓</b> Full day</span>
                 <span><b class="half-mark">✓</b> Half day</span>
-                <span><b class="no-mark">×</b> Not available</span>
-              </div>
-              <div class="schedule-table-wrap">
-                <table class="schedule-table" aria-label="OPD timing matrix">
-                  <thead>
-                    <tr>
-                      <th>DMG</th>
-                      <th>Discipline</th>
-                      <th>Mon</th>
-                      <th>Tue</th>
-                      <th>Wed</th>
-                      <th>Thur</th>
-                      <th>Fri</th>
-                    </tr>
-                  </thead>
-                  <tbody id="schedule-table-body"></tbody>
-                </table>
               </div>
             </div>
           </div>
