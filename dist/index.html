@@ -19,8 +19,8 @@
         <div class="brand-lockup">
           <img class="brand-logo" src="./logo.png" alt="HAPENS logo" />
           <div>
-            <p class="eyebrow">HAPENS</p>
-            <h1 data-i18n="appName">Healthcare Associated Patient Enrolment and Navigation System</h1>
+            <p class="brand-name">HAPENS</p>
+            <h1 data-i18n="appName">Patient enrolment & navigation</h1>
           </div>
         </div>
         <label class="language-control" for="language">
@@ -37,10 +37,43 @@
       </header>
 
       <main>
-        <section class="screen auth-screen active" id="login-screen" aria-labelledby="login-title">
+        <section class="screen active" id="deposit-screen" aria-labelledby="deposit-title">
+          <div class="activation-card">
+            <img class="auth-logo compact" src="./logo.png" alt="HAPENS logo" />
+            <div class="auth-copy">
+              <p class="eyebrow">Deposit activation</p>
+              <h2 id="deposit-title">Activate patient ID</h2>
+              <p>Scan the QR code and pay the refundable registration deposit. The patient login is enabled after payment confirmation.</p>
+            </div>
+
+            <div class="qr-shell" aria-label="Deposit QR code for HAPENS demo payment">
+              <img
+                src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=10&data=upi%3A%2F%2Fpay%3Fpa%3Dhapens%40upi%26pn%3DHAPENS%2520Hospital%26am%3D5000%26cu%3DINR%26tn%3DPatient%2520registration%2520deposit"
+                alt="QR code to pay HAPENS registration deposit"
+              />
+            </div>
+
+            <div class="deposit-summary">
+              <div>
+                <span>Deposit amount</span>
+                <strong>₹5,000</strong>
+              </div>
+              <div>
+                <span>UPI reference</span>
+                <strong>HAPENS-DEP-12345</strong>
+              </div>
+            </div>
+
+            <button class="primary-btn" id="confirm-deposit" type="button">I have paid the deposit</button>
+            <button class="text-btn center" id="demo-skip-deposit" type="button">Demo mode: continue without payment</button>
+          </div>
+        </section>
+
+        <section class="screen auth-screen" id="login-screen" aria-labelledby="login-title">
           <div class="auth-card">
             <img class="auth-logo" src="./logo.png" alt="HAPENS logo" />
             <div class="auth-copy">
+              <span class="activation-pill">Patient ID active</span>
               <h2 id="login-title" data-i18n="loginTitle">Patient login</h2>
               <p data-i18n="loginSubtitle">Use your hospital user ID to continue to appointments, reports, payments, and directions.</p>
             </div>
@@ -61,6 +94,7 @@
               <span data-i18n="newPatient">New patient?</span>
               <button class="text-btn" type="button" data-target="register-screen" data-i18n="registerNow">Register now</button>
             </div>
+            <button class="secondary-btn full-width" type="button" data-target="admin-screen">Open admin console</button>
           </div>
         </section>
 
@@ -241,6 +275,14 @@
                   </select>
                 </label>
               </div>
+              <label>
+                <span>Patient category</span>
+                <select id="registration-category" name="patient-category" required>
+                  <option value="">Select category</option>
+                  <option value="General">General</option>
+                  <option value="Private">Private</option>
+                </select>
+              </label>
             </section>
 
             <section class="form-section" aria-labelledby="address-heading">
@@ -499,6 +541,89 @@
           </form>
         </section>
 
+        <section class="screen" id="admin-screen" aria-labelledby="admin-title">
+          <button class="back-btn" type="button" data-target="login-screen" aria-label="Back to login">‹</button>
+          <div class="section-heading">
+            <p class="eyebrow">Admin</p>
+            <h2 id="admin-title">Registration control room</h2>
+            <p>Review registrations, activate accounts, assign disease management groups, book appointments, and monitor token calling.</p>
+          </div>
+
+          <div class="admin-grid">
+            <div class="admin-card">
+              <div class="panel-title-row">
+                <h3>Registration lookup</h3>
+                <span class="badge">3 pending</span>
+              </div>
+              <label>
+                <span>Search patient</span>
+                <input id="admin-search" type="search" placeholder="Name, patient ID, mobile no." />
+              </label>
+              <div class="registration-list" id="registration-list"></div>
+            </div>
+
+            <div class="admin-card">
+              <h3>Account actions</h3>
+              <div class="field-pair">
+                <label>
+                  <span>Selected registration</span>
+                  <select id="admin-patient-select"></select>
+                </label>
+                <label>
+                  <span>Disease management group</span>
+                  <select id="admin-dmg-select"></select>
+                </label>
+              </div>
+              <div class="field-pair">
+                <label>
+                  <span>Category</span>
+                  <select id="admin-category-select">
+                    <option>General</option>
+                    <option>Private</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Account status</span>
+                  <select id="admin-status-select">
+                    <option>Active</option>
+                    <option>Inactive</option>
+                    <option>Pending deposit</option>
+                  </select>
+                </label>
+              </div>
+              <button class="primary-btn" id="admin-save-patient" type="button">Save account changes</button>
+            </div>
+
+            <div class="admin-card">
+              <h3>Add appointment</h3>
+              <div class="field-pair">
+                <label>
+                  <span>Discipline</span>
+                  <select id="admin-discipline-select">
+                    <option value="SO">Surgical Oncology (SO)</option>
+                    <option value="MO">Medical Oncology (MO)</option>
+                    <option value="RO">Radiation Oncology (RO)</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Appointment date</span>
+                  <input id="admin-appointment-date" type="date" />
+                </label>
+              </div>
+              <button class="primary-btn" id="admin-book-slot" type="button">Check and book slot</button>
+              <div class="slot-result" id="admin-slot-result">Select a patient, DMG, discipline, and date.</div>
+            </div>
+
+            <div class="admin-card">
+              <div class="panel-title-row">
+                <h3>Calling screen</h3>
+                <span class="badge">Live OPD</span>
+              </div>
+              <div class="calling-board" id="calling-board"></div>
+            </div>
+          </div>
+        </section>
+
         <section class="screen" id="dashboard-screen" aria-labelledby="dashboard-title">
           <div class="patient-card">
             <div>
@@ -506,7 +631,10 @@
               <h2 id="dashboard-title">Asha Sharma</h2>
               <p data-i18n="patientId">Patient ID: HAPENS12345</p>
             </div>
-            <span class="badge" data-i18n="activeCase">Active case</span>
+            <div class="patient-status-stack">
+              <span class="badge" data-i18n="activeCase">Active case</span>
+              <span class="badge soft">Private · Breast-oncology</span>
+            </div>
           </div>
 
           <div class="quick-actions" aria-label="Primary actions">
@@ -530,30 +658,101 @@
               <strong data-i18n="hospitalMap">Hospital navigation</strong>
               <small data-i18n="hospitalMapHint">Find OPD, lab, billing, and pharmacy</small>
             </button>
+            <button class="action-card" type="button" data-panel="token-panel">
+              <span class="action-icon">#</span>
+              <strong>Token & calling</strong>
+              <small>See token series, queue, and room</small>
+            </button>
           </div>
 
           <div class="dashboard-panel active" id="appointment-panel">
             <div class="panel-title-row">
               <h3 data-i18n="appointments">Appointments</h3>
-              <button class="secondary-btn" type="button" data-i18n="reschedule">Reschedule</button>
+              <span class="badge">Token AF23</span>
             </div>
             <div class="timeline-item">
               <span class="time-chip">10:30 AM</span>
               <div>
-                <strong data-i18n="medicalOncology">Medical Oncology OPD</strong>
-                <p data-i18n="appointmentDetail">Dr. Meera Rao, Block B, Floor 2</p>
+                <strong>Medical Oncology OPD</strong>
+                <p>Room 14, Private OPD. Token opens 1 hour before appointment time.</p>
               </div>
             </div>
-            <form class="mini-form">
-              <select aria-label="Department">
-                <option data-i18n="selectDepartment">Select department</option>
-                <option>Medical Oncology</option>
-                <option>Radiation Oncology</option>
-                <option>Surgical Oncology</option>
-              </select>
-              <input type="date" aria-label="Appointment date" />
-              <button type="button" class="primary-btn" data-i18n="requestSlot">Request slot</button>
+
+            <form class="mini-form appointment-builder">
+              <label>
+                <span>Category</span>
+                <select id="appointment-category" aria-label="Appointment category">
+                  <option>Private</option>
+                  <option>General</option>
+                </select>
+              </label>
+              <label>
+                <span>Disease management group</span>
+                <select id="appointment-dmg" aria-label="Disease management group"></select>
+              </label>
+              <label>
+                <span>Discipline</span>
+                <select id="appointment-discipline" aria-label="Discipline">
+                  <option value="SO">Surgical Oncology (SO)</option>
+                  <option value="MO">Medical Oncology (MO)</option>
+                  <option value="RO">Radiation Oncology (RO)</option>
+                </select>
+              </label>
+              <label>
+                <span>Appointment date</span>
+                <input id="appointment-date" type="date" aria-label="Appointment date" />
+              </label>
+              <button type="button" class="primary-btn" id="request-slot" data-i18n="requestSlot">Request slot</button>
             </form>
+
+            <div class="slot-result" id="patient-slot-result">Choose a date to check OPD availability.</div>
+
+            <div class="token-system-card">
+              <h4>Appointment, token and calling rules</h4>
+              <p>Appointments can be booked after consultation at OPD reception, by WhatsApp message to 9869451768, or by email to pcro@tmc.gov.in for private and genopd@tmc.gov.in for general.</p>
+              <p>On the visit day, the token is issued 1 hour before the appointment. Tokens are called in sequence within their series, for example AF23 after AF22, and displayed with the room number.</p>
+              <div class="token-series">
+                <span>SE</span>
+                <span>ME</span>
+                <span>AF</span>
+                <span>RO</span>
+              </div>
+            </div>
+
+            <div class="schedule-card">
+              <h4>OPD timing matrix</h4>
+              <div class="schedule-legend">
+                <span><b class="yes-mark">✓</b> Full day</span>
+                <span><b class="half-mark">✓</b> Half day</span>
+                <span><b class="no-mark">×</b> Not available</span>
+              </div>
+              <div class="schedule-table-wrap">
+                <table class="schedule-table" aria-label="OPD timing matrix">
+                  <thead>
+                    <tr>
+                      <th>DMG</th>
+                      <th>Discipline</th>
+                      <th>Mon</th>
+                      <th>Tue</th>
+                      <th>Wed</th>
+                      <th>Thur</th>
+                      <th>Fri</th>
+                    </tr>
+                  </thead>
+                  <tbody id="schedule-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-panel" id="token-panel">
+            <h3>Token and calling status</h3>
+            <div class="calling-board patient-board" id="patient-calling-board"></div>
+            <div class="token-system-card">
+              <h4>Your visit guidance</h4>
+              <p>Carry the appointment slip or confirmation message at the entrance gate. Please avoid reaching OPD more than 1 hour before the appointment time to reduce waiting-area congestion.</p>
+              <p>WhatsApp booking is message-only. Do not make voice or video calls to the appointment number.</p>
+            </div>
           </div>
 
           <div class="dashboard-panel" id="report-panel">

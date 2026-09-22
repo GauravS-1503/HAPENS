@@ -1,6 +1,6 @@
 const translations = {
   en: {
-    appName: "Healthcare Associated Patient Enrolment and Navigation System",
+    appName: "Patient enrolment & navigation",
     language: "Language",
     loginTitle: "Patient login",
     loginSubtitle: "Use your hospital user ID to continue to appointments, reports, payments, and directions.",
@@ -61,7 +61,7 @@ const translations = {
     payToast: "Payment gateway placeholder opened."
   },
   hi: {
-    appName: "स्वास्थ्य संबद्ध रोगी नामांकन और नेविगेशन प्रणाली",
+    appName: "रोगी नामांकन और नेविगेशन",
     language: "भाषा",
     loginTitle: "रोगी लॉगिन",
     loginSubtitle: "अपॉइंटमेंट, रिपोर्ट, भुगतान और दिशा-निर्देश देखने के लिए अस्पताल यूजर आईडी का उपयोग करें।",
@@ -122,7 +122,7 @@ const translations = {
     payToast: "भुगतान गेटवे प्लेसहोल्डर खुला।"
   },
   bn: {
-    appName: "স্বাস্থ্য-সংযুক্ত রোগী নিবন্ধন ও নেভিগেশন সিস্টেম",
+    appName: "রোগী নিবন্ধন ও নেভিগেশন",
     language: "ভাষা",
     loginTitle: "রোগী লগইন",
     loginSubtitle: "অ্যাপয়েন্টমেন্ট, রিপোর্ট, পেমেন্ট ও দিকনির্দেশ দেখতে হাসপাতালের ইউজার আইডি ব্যবহার করুন।",
@@ -183,7 +183,7 @@ const translations = {
     payToast: "পেমেন্ট গেটওয়ে প্লেসহোল্ডার খোলা হয়েছে।"
   },
   ta: {
-    appName: "சுகாதார இணைப்பு நோயாளர் பதிவு மற்றும் வழிசெலுத்தல் அமைப்பு",
+    appName: "நோயாளர் பதிவு மற்றும் வழிசெலுத்தல்",
     language: "மொழி",
     loginTitle: "நோயாளர் உள்நுழைவு",
     loginSubtitle: "அப்பாயிண்ட்மெண்ட், அறிக்கைகள், கட்டணம் மற்றும் வழிசெலுத்தலுக்கு மருத்துவமனை பயனர் ஐடியைப் பயன்படுத்துங்கள்.",
@@ -244,7 +244,7 @@ const translations = {
     payToast: "கட்டண வாயில் மாதிரி திறக்கப்பட்டது."
   },
   te: {
-    appName: "ఆరోగ్య సంరక్షణ అనుబంధ రోగి నమోదు మరియు నావిగేషన్ వ్యవస్థ",
+    appName: "రోగి నమోదు మరియు నావిగేషన్",
     language: "భాష",
     loginTitle: "రోగి లాగిన్",
     loginSubtitle: "అపాయింట్మెంట్లు, రిపోర్టులు, చెల్లింపులు మరియు దిశల కోసం ఆసుపత్రి యూజర్ ఐడీ ఉపయోగించండి.",
@@ -305,7 +305,7 @@ const translations = {
     payToast: "చెల్లింపు గేట్వే నమూనా తెరుచుకుంది."
   },
   mr: {
-    appName: "आरोग्य-संबंधित रुग्ण नोंदणी आणि नेव्हिगेशन प्रणाली",
+    appName: "रुग्ण नोंदणी आणि नेव्हिगेशन",
     language: "भाषा",
     loginTitle: "रुग्ण लॉगिन",
     loginSubtitle: "अपॉइंटमेंट, रिपोर्ट, पेमेंट आणि दिशा पाहण्यासाठी हॉस्पिटल यूजर आयडी वापरा.",
@@ -412,6 +412,251 @@ function copyAddress(fromPrefix, toPrefix) {
   });
 }
 
+const weekdays = ["Mon", "Tue", "Wed", "Thur", "Fri"];
+const disciplineNames = {
+  SO: "Surgical Oncology",
+  MO: "Medical Oncology",
+  RO: "Radiation Oncology"
+};
+
+const opdSchedule = {
+  Private: {
+    "Gynaec-oncology": {
+      SO: ["yes", "yes", "yes", "yes", "yes"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["no", "yes", "no", "yes", "yes"],
+      note: "RO Thursday forenoon starts at 8:30 am - 12:30 pm."
+    },
+    "Neuro-oncology": {
+      SO: ["yes", "yes", "no", "yes", "no"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["yes", "yes", "yes", "yes", "yes"]
+    },
+    "Adult Haemat-oncology": {
+      SO: ["no", "no", "no", "no", "no"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["yes", "yes", "yes", "no", "yes"]
+    },
+    "Breast-oncology": {
+      SO: ["yes", "yes", "yes", "yes", "yes"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["yes", "yes", "half", "yes", "half"],
+      note: "RO Wednesday forenoon and Friday afternoon are half-day clinics."
+    },
+    "Head & Neck-oncology (A)": {
+      SO: ["no", "yes", "no", "no", "yes"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["yes", "yes", "yes", "no", "yes"],
+      note: "RO Mon/Tue/Wed afternoon starts at 12:30 pm. Friday forenoon starts at 8:30 am - 12:30 pm."
+    },
+    "Thoracic-oncology": {
+      SO: ["yes", "no", "yes", "no", "no"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["yes", "no", "yes", "half", "yes"]
+    },
+    "Gastro Intestinal & Colorectal-oncology": {
+      SO: ["yes", "no", "yes", "no", "yes"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["yes", "yes", "yes", "yes", "yes"]
+    },
+    "Pediatric oncology": {
+      SO: ["no", "yes", "no", "no", "yes"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["yes", "yes", "yes", "no", "yes"]
+    },
+    "Uro-oncology": {
+      SO: ["no", "yes", "no", "yes", "no"],
+      MO: ["no", "yes", "no", "yes", "no"],
+      RO: ["no", "yes", "no", "yes", "no"]
+    }
+  },
+  General: {
+    "Gynaec-oncology": {
+      SO: ["yes", "no", "yes", "no", "yes"],
+      MO: ["yes", "no", "yes", "no", "yes"],
+      RO: ["yes", "no", "yes", "no", "yes"]
+    },
+    "Neuro-oncology": {
+      SO: ["yes", "yes", "no", "yes", "no"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["yes", "yes", "yes", "yes", "yes"]
+    },
+    "Adult Haemat-oncology": {
+      SO: ["no", "no", "no", "no", "no"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["half", "no", "no", "half", "half"],
+      note: "RO Monday and Friday forenoon start at 8:30 am - 12:30 pm. Thursday afternoon starts at 12:30 pm."
+    },
+    "Breast-oncology": {
+      SO: ["yes", "yes", "half", "yes", "yes"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["yes", "no", "yes", "half", "half"],
+      note: "SO Tuesday forenoon starts at 8:30 am - 12:30 pm. RO Thursday afternoon and Friday forenoon are half-day clinics."
+    },
+    "Head & Neck-oncology (A)": {
+      SO: ["no", "yes", "no", "no", "yes"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["half", "no", "half", "no", "half"],
+      note: "RO Monday and Wednesday forenoon start at 8:30 am - 12:30 pm. Friday afternoon starts at 12:30 pm."
+    },
+    "Gastro Intestinal & Colorectal-oncology": {
+      SO: ["no", "no", "yes", "no", "yes"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["yes", "yes", "yes", "yes", "yes"]
+    },
+    "Bone & Soft Tissue": {
+      SO: ["no", "yes", "no", "yes", "no"],
+      MO: ["no", "yes", "no", "yes", "no"],
+      RO: ["no", "half", "no", "half", "no"],
+      note: "RO Tuesday and Thursday afternoon start at 12:30 pm."
+    },
+    "Pediatric oncology": {
+      SO: ["no", "yes", "no", "no", "yes"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["yes", "yes", "yes", "no", "yes"]
+    },
+    "Uro-oncology": {
+      SO: ["no", "yes", "no", "yes", "no"],
+      MO: ["no", "yes", "no", "yes", "no"],
+      RO: ["no", "yes", "no", "yes", "no"]
+    }
+  }
+};
+
+const registrations = [
+  { id: "HAPENS12345", name: "Asha Sharma", mobile: "+91 98765 43210", category: "Private", dmg: "Breast-oncology", status: "Active" },
+  { id: "HAPENS12346", name: "Ravi Menon", mobile: "+91 99887 77665", category: "General", dmg: "Head & Neck-oncology (A)", status: "Pending deposit" },
+  { id: "HAPENS12347", name: "Farida Khan", mobile: "+91 91234 56789", category: "Private", dmg: "Gastro Intestinal & Colorectal-oncology", status: "Inactive" }
+];
+
+const callingRooms = [
+  { room: "Room 14", clinic: "Medical Oncology", token: "AF23", series: "AF22 completed" },
+  { room: "Room 08", clinic: "Surgical Oncology", token: "SE11", series: "SE10 completed" },
+  { room: "Room 21", clinic: "Radiation Oncology", token: "RO07", series: "RO06 completed" }
+];
+
+function markFor(value) {
+  if (value === "yes") return '<b class="yes-mark">✓</b>';
+  if (value === "half") return '<b class="half-mark">✓</b>';
+  return '<b class="no-mark">×</b>';
+}
+
+function slotText(value) {
+  if (value === "yes") return "Full day OPD slot available.";
+  if (value === "half") return "Half-day OPD slot available. Check timing note before travel.";
+  return "No OPD slot for this DMG and discipline on the selected day.";
+}
+
+function selectedWeekdayIndex(dateValue) {
+  const date = new Date(`${dateValue}T12:00:00`);
+  const index = date.getDay() - 1;
+  return index >= 0 && index <= 4 ? index : -1;
+}
+
+function getSlot(category, dmg, discipline, dateValue) {
+  const dayIndex = selectedWeekdayIndex(dateValue);
+  if (dayIndex === -1) {
+    return { value: "no", day: "Weekend", text: "OPD scheduling is shown for Monday to Friday only." };
+  }
+  const group = opdSchedule[category]?.[dmg];
+  const value = group?.[discipline]?.[dayIndex] || "no";
+  return {
+    value,
+    day: weekdays[dayIndex],
+    note: group?.note || "",
+    text: slotText(value)
+  };
+}
+
+function populateDmgSelect(select, category = "Private") {
+  if (!select) return;
+  const selected = select.value;
+  select.innerHTML = Object.keys(opdSchedule[category])
+    .map((dmg) => `<option value="${dmg}">${dmg}</option>`)
+    .join("");
+  if (selected && opdSchedule[category][selected]) {
+    select.value = selected;
+  }
+}
+
+function renderSchedule(category = "Private") {
+  const body = document.querySelector("#schedule-table-body");
+  if (!body) return;
+  body.innerHTML = Object.entries(opdSchedule[category])
+    .flatMap(([dmg, disciplines]) =>
+      ["SO", "MO", "RO"].map((discipline, index) => `
+        <tr>
+          <td>${index === 0 ? dmg : ""}</td>
+          <td>${discipline}</td>
+          ${disciplines[discipline].map((value) => `<td>${markFor(value)}</td>`).join("")}
+        </tr>
+      `)
+    )
+    .join("");
+}
+
+function renderCallingBoards() {
+  const html = callingRooms
+    .map((item) => `
+      <div class="calling-room">
+        <div>
+          <strong>${item.room}</strong>
+          <span>${item.clinic} · ${item.series}</span>
+        </div>
+        <div class="token-number">${item.token}</div>
+      </div>
+    `)
+    .join("");
+  document.querySelectorAll("#calling-board, #patient-calling-board").forEach((board) => {
+    board.innerHTML = html;
+  });
+}
+
+function renderRegistrations(filter = "") {
+  const list = document.querySelector("#registration-list");
+  if (!list) return;
+  const normalized = filter.toLowerCase();
+  const rows = registrations.filter((patient) =>
+    [patient.name, patient.id, patient.mobile, patient.dmg, patient.status].join(" ").toLowerCase().includes(normalized)
+  );
+  list.innerHTML = rows
+    .map((patient) => `
+      <div class="registration-row">
+        <strong>${patient.name}</strong>
+        <small>${patient.id} · ${patient.mobile}</small>
+        <small>${patient.category} · ${patient.dmg} · ${patient.status}</small>
+      </div>
+    `)
+    .join("");
+}
+
+function populateAdminControls() {
+  const patientSelect = document.querySelector("#admin-patient-select");
+  const dmgSelect = document.querySelector("#admin-dmg-select");
+  if (patientSelect) {
+    patientSelect.innerHTML = registrations.map((patient) => `<option value="${patient.id}">${patient.name} (${patient.id})</option>`).join("");
+  }
+  populateDmgSelect(dmgSelect, document.querySelector("#admin-category-select")?.value || "General");
+}
+
+function checkSlot({ category, dmg, discipline, dateValue, target, admin = false }) {
+  if (!dateValue) {
+    target.textContent = "Choose an appointment date to check availability.";
+    target.className = "slot-result";
+    return;
+  }
+  const result = getSlot(category, dmg, discipline, dateValue);
+  const tokenPrefix = discipline === "SO" ? "SE" : discipline === "MO" ? "ME" : "RO";
+  target.className = `slot-result ${result.value === "no" ? "unavailable" : "available"}`;
+  target.innerHTML = `
+    <strong>${result.day}: ${disciplineNames[discipline]} · ${category}</strong><br>
+    ${result.text}<br>
+    ${result.value !== "no" ? `Suggested token series: ${tokenPrefix}. Token opens 1 hour before appointment time.` : ""}
+    ${result.note ? `<br><small>${result.note}</small>` : ""}
+    ${admin && result.value !== "no" ? "<br><small>Demo booking added to the calling board queue.</small>" : ""}
+  `;
+}
+
 document.querySelectorAll("[data-target]").forEach((button) => {
   button.addEventListener("click", () => showScreen(button.dataset.target));
 });
@@ -440,8 +685,62 @@ document.querySelectorAll("[data-panel]").forEach((button) => {
 
 document.querySelector("[data-panel='appointment-panel']").classList.add("active");
 
-document.querySelector("[data-i18n='requestSlot']").addEventListener("click", () => showToast("slotToast"));
+document.querySelector("#confirm-deposit").addEventListener("click", () => {
+  localStorage.setItem("hapens-deposit-active", "true");
+  showScreen("login-screen");
+  showToast("payToast");
+});
+
+document.querySelector("#demo-skip-deposit").addEventListener("click", () => {
+  showScreen("login-screen");
+});
+
+document.querySelector("#request-slot").addEventListener("click", () => {
+  checkSlot({
+    category: document.querySelector("#appointment-category").value,
+    dmg: document.querySelector("#appointment-dmg").value,
+    discipline: document.querySelector("#appointment-discipline").value,
+    dateValue: document.querySelector("#appointment-date").value,
+    target: document.querySelector("#patient-slot-result")
+  });
+});
+
 document.querySelector("[data-i18n='payNow']").addEventListener("click", () => showToast("payToast"));
+
+document.querySelector("#appointment-category").addEventListener("change", (event) => {
+  populateDmgSelect(document.querySelector("#appointment-dmg"), event.target.value);
+  renderSchedule(event.target.value);
+});
+
+document.querySelector("#admin-category-select").addEventListener("change", (event) => {
+  populateDmgSelect(document.querySelector("#admin-dmg-select"), event.target.value);
+});
+
+document.querySelector("#admin-search").addEventListener("input", (event) => {
+  renderRegistrations(event.target.value);
+});
+
+document.querySelector("#admin-save-patient").addEventListener("click", () => {
+  const selected = registrations.find((patient) => patient.id === document.querySelector("#admin-patient-select").value);
+  if (selected) {
+    selected.category = document.querySelector("#admin-category-select").value;
+    selected.dmg = document.querySelector("#admin-dmg-select").value;
+    selected.status = document.querySelector("#admin-status-select").value;
+    renderRegistrations(document.querySelector("#admin-search").value);
+    showToast("registerToast");
+  }
+});
+
+document.querySelector("#admin-book-slot").addEventListener("click", () => {
+  checkSlot({
+    category: document.querySelector("#admin-category-select").value,
+    dmg: document.querySelector("#admin-dmg-select").value,
+    discipline: document.querySelector("#admin-discipline-select").value,
+    dateValue: document.querySelector("#admin-appointment-date").value,
+    target: document.querySelector("#admin-slot-result"),
+    admin: true
+  });
+});
 
 document.querySelector("#same-correspondence").addEventListener("change", (event) => {
   if (event.target.checked) {
@@ -464,5 +763,16 @@ document.querySelector("#nominee-same-correspondence").addEventListener("change"
 });
 
 languageSelect.addEventListener("change", () => setLanguage(languageSelect.value));
+
+populateDmgSelect(document.querySelector("#appointment-dmg"), "Private");
+populateDmgSelect(document.querySelector("#admin-dmg-select"), "General");
+populateAdminControls();
+renderRegistrations();
+renderSchedule("Private");
+renderCallingBoards();
+
+if (localStorage.getItem("hapens-deposit-active") === "true") {
+  showScreen("login-screen");
+}
 
 setLanguage(localStorage.getItem("hapens-language") || "en");
