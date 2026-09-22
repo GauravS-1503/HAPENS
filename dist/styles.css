@@ -482,6 +482,16 @@ label {
   justify-items: end;
 }
 
+.demo-login-btn {
+  border: 1px solid rgba(11, 97, 94, 0.35);
+  border-radius: 99px;
+  background: #fff;
+  color: var(--brand);
+  font-size: 0.74rem;
+  font-weight: 850;
+  padding: 0.42rem 0.7rem;
+}
+
 .badge,
 .time-chip {
   display: inline-flex;
