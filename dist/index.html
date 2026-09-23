@@ -615,6 +615,27 @@
             </div>
 
             <div class="admin-card">
+              <h3>Book diagnostics</h3>
+              <p>Uses the selected registration from Account actions.</p>
+              <div class="field-pair">
+                <label>
+                  <span>Diagnostic test</span>
+                  <select id="admin-diagnostic-test"></select>
+                </label>
+                <label>
+                  <span>Clinical priority</span>
+                  <select id="admin-diagnostic-priority">
+                    <option>Routine</option>
+                    <option>Priority</option>
+                    <option>Same day if available</option>
+                  </select>
+                </label>
+              </div>
+              <button class="primary-btn" id="admin-book-diagnostic" type="button">Search and request test</button>
+              <div class="slot-result" id="admin-diagnostic-result">Select a diagnostic test to view latest availability.</div>
+            </div>
+
+            <div class="admin-card">
               <div class="panel-title-row">
                 <h3>Calling screen</h3>
                 <span class="badge">Live OPD</span>
@@ -648,6 +669,11 @@
               <span class="action-icon">≡</span>
               <strong data-i18n="sampleStatus">Sample report status</strong>
               <small data-i18n="sampleStatusHint">Track pathology and imaging updates</small>
+            </button>
+            <button class="action-card" type="button" data-panel="diagnostics-panel">
+              <span class="action-icon">T</span>
+              <strong>Diagnostics & tests</strong>
+              <small>Request CT, MRI, biopsy, and lab slots</small>
             </button>
             <button class="action-card" type="button" data-panel="payment-panel">
               <span class="action-icon">₹</span>
@@ -734,6 +760,31 @@
             </div>
           </div>
 
+          <div class="dashboard-panel" id="diagnostics-panel">
+            <div class="panel-title-row">
+              <h3>Diagnostics & tests</h3>
+              <span class="badge soft">Latest availability</span>
+            </div>
+            <form class="mini-form diagnostic-builder">
+              <label>
+                <span>Requested test</span>
+                <select id="diagnostic-test" aria-label="Requested diagnostic test"></select>
+              </label>
+              <label>
+                <span>Request reason</span>
+                <select id="diagnostic-reason" aria-label="Diagnostic request reason">
+                  <option>Doctor advised during OPD</option>
+                  <option>Follow-up investigation</option>
+                  <option>Pre-treatment workup</option>
+                  <option>Report review pending</option>
+                </select>
+              </label>
+              <button class="primary-btn" id="request-diagnostic" type="button">Search diagnostic slot</button>
+            </form>
+            <div class="slot-result" id="diagnostic-slot-result">Select a test to view latest availability.</div>
+            <div class="diagnostic-list" id="diagnostic-availability-list" aria-label="Diagnostic availability list"></div>
+          </div>
+
           <div class="dashboard-panel" id="token-panel">
             <h3>Token and calling status</h3>
             <div class="calling-board patient-board" id="patient-calling-board"></div>
@@ -771,23 +822,7 @@
 
           <div class="dashboard-panel" id="report-panel">
             <h3 data-i18n="reportsStatus">Reports status</h3>
-            <div class="progress-list">
-              <div>
-                <span data-i18n="bloodSample">Blood sample</span>
-                <progress value="100" max="100"></progress>
-                <small data-i18n="readyForDoctor">Ready for doctor review</small>
-              </div>
-              <div>
-                <span data-i18n="biopsy">Biopsy report</span>
-                <progress value="65" max="100"></progress>
-                <small data-i18n="processing">Processing in pathology lab</small>
-              </div>
-              <div>
-                <span data-i18n="ctScan">CT scan</span>
-                <progress value="30" max="100"></progress>
-                <small data-i18n="scheduledToday">Scheduled today</small>
-              </div>
-            </div>
+            <div class="report-list" id="report-list"></div>
           </div>
 
           <div class="dashboard-panel" id="payment-panel">

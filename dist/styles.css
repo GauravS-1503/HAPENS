@@ -664,6 +664,39 @@ label {
   color: #8b2d2d;
 }
 
+.slot-result.searching {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--brand);
+}
+
+.spinner {
+  width: 1.05rem;
+  height: 1.05rem;
+  border: 0.16rem solid rgba(11, 97, 94, 0.18);
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+
+.confirm-actions {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+
+.confirm-actions p {
+  margin: 0;
+  color: inherit;
+  font-weight: 850;
+}
+
+.compact-btn {
+  min-height: 2.55rem;
+  width: 100%;
+}
+
 .token-series {
   display: flex;
   flex-wrap: wrap;
@@ -854,14 +887,57 @@ label {
   min-height: 2.75rem;
 }
 
-.progress-list {
+.diagnostic-list,
+.report-list {
   display: grid;
-  gap: 0.95rem;
+  gap: 0.75rem;
 }
 
-.progress-list div {
+.diagnostic-item,
+.report-card {
   display: grid;
-  gap: 0.35rem;
+  gap: 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 0.95rem;
+  background: #fff;
+  padding: 0.85rem;
+}
+
+.diagnostic-item span,
+.diagnostic-item small,
+.report-card span,
+.report-card p {
+  color: var(--muted);
+}
+
+.report-title-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.report-title-row > div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.report-card p {
+  margin: 0;
+}
+
+.report-download {
+  min-height: 2.35rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 0.8rem;
+}
+
+.report-download:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
 }
 
 progress {
@@ -880,6 +956,12 @@ progress::-webkit-progress-bar {
 progress::-webkit-progress-value {
   border-radius: 99px;
   background: var(--blue);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 progress::-moz-progress-bar {
