@@ -37,43 +37,11 @@
       </header>
 
       <main>
-        <section class="screen" id="deposit-screen" aria-labelledby="deposit-title">
-          <div class="activation-card">
-            <img class="auth-logo compact" src="./logo.png" alt="HAPENS logo" />
-            <div class="auth-copy">
-              <p class="eyebrow">Deposit activation</p>
-              <h2 id="deposit-title">Complete deposit payment</h2>
-              <p>Scan the QR code after login and pay the refundable registration deposit. The patient ID activates after payment confirmation.</p>
-            </div>
-
-            <div class="qr-shell" aria-label="Deposit QR code for HAPENS demo payment">
-              <img
-                src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=10&data=upi%3A%2F%2Fpay%3Fpa%3Dhapens%40upi%26pn%3DHAPENS%2520Hospital%26am%3D5000%26cu%3DINR%26tn%3DPatient%2520registration%2520deposit"
-                alt="QR code to pay HAPENS registration deposit"
-              />
-            </div>
-
-            <div class="deposit-summary">
-              <div>
-                <span>Deposit amount</span>
-                <strong>₹5,000</strong>
-              </div>
-              <div>
-                <span>UPI reference</span>
-                <strong>HAPENS-DEP-12345</strong>
-              </div>
-            </div>
-
-            <button class="primary-btn" id="confirm-deposit" type="button">I have paid the deposit</button>
-            <button class="text-btn center" id="demo-skip-deposit" type="button">Demo mode: activate ID</button>
-          </div>
-        </section>
-
         <section class="screen auth-screen active" id="login-screen" aria-labelledby="login-title">
           <div class="auth-card">
             <img class="auth-logo" src="./logo.png" alt="HAPENS logo" />
             <div class="auth-copy">
-              <span class="activation-pill pending">Deposit required after login</span>
+              <span class="activation-pill">Demo access enabled</span>
               <h2 id="login-title" data-i18n="loginTitle">Patient login</h2>
               <p data-i18n="loginSubtitle">Use your hospital user ID to continue to appointments, reports, payments, and directions.</p>
             </div>
@@ -276,7 +244,7 @@
                 </label>
               </div>
               <label>
-                <span>Patient category</span>
+                <span>Patient category (General / Private)</span>
                 <select id="registration-category" name="patient-category" required>
                   <option value="">Select category</option>
                   <option value="General">General</option>
@@ -596,22 +564,12 @@
 
             <div class="admin-card">
               <h3>Add appointment</h3>
-              <div class="field-pair">
-                <label>
-                  <span>Discipline</span>
-                  <select id="admin-discipline-select">
-                    <option value="SO">Surgical Oncology (SO)</option>
-                    <option value="MO">Medical Oncology (MO)</option>
-                    <option value="RO">Radiation Oncology (RO)</option>
-                  </select>
-                </label>
-                <label>
-                  <span>Available OPD day</span>
-                  <select id="admin-day-select"></select>
-                </label>
-              </div>
+              <label>
+                <span>Available OPD day</span>
+                <select id="admin-day-select"></select>
+              </label>
               <button class="primary-btn" id="admin-book-slot" type="button">Check and book slot</button>
-              <div class="slot-result" id="admin-slot-result">Select a patient, DMG, discipline, and available OPD day.</div>
+              <div class="slot-result" id="admin-slot-result">Select a patient, DMG, and available OPD day.</div>
             </div>
 
             <div class="admin-card">
@@ -646,58 +604,55 @@
         </section>
 
         <section class="screen" id="dashboard-screen" aria-labelledby="dashboard-title">
-          <div class="patient-card">
-            <div>
-              <p class="eyebrow" data-i18n="welcomeBack">Welcome back</p>
-              <h2 id="dashboard-title">Asha Sharma</h2>
-              <p data-i18n="patientId">Patient ID: HAPENS12345</p>
+          <div class="dashboard-home" id="dashboard-home">
+            <div class="patient-card">
+              <div>
+                <p class="eyebrow" data-i18n="welcomeBack">Welcome back</p>
+                <h2 id="dashboard-title">Asha Sharma</h2>
+                <p data-i18n="patientId">Patient ID: HAPENS12345</p>
+              </div>
+              <div class="patient-status-stack">
+                <span class="badge" data-i18n="activeCase">Active case</span>
+                <span class="badge soft">Private · Breast-oncology</span>
+                <button class="demo-login-btn" type="button" data-target="login-screen">Demo: login screen</button>
+              </div>
             </div>
-            <div class="patient-status-stack">
-              <span class="badge" data-i18n="activeCase">Active case</span>
-              <span class="badge soft">Private · Breast-oncology</span>
-              <button class="demo-login-btn" type="button" data-target="login-screen">Demo: login screen</button>
+
+            <div class="quick-actions" aria-label="Primary actions">
+              <button class="action-card" type="button" data-panel="appointment-panel">
+                <span class="action-icon">+</span>
+                <strong data-i18n="bookAppointment">Book appointment</strong>
+                <small data-i18n="bookAppointmentHint">Choose OPD day and department</small>
+              </button>
+              <button class="action-card" type="button" data-panel="report-panel">
+                <span class="action-icon">≡</span>
+                <strong data-i18n="sampleStatus">Sample report status</strong>
+                <small data-i18n="sampleStatusHint">Track pathology and imaging updates</small>
+              </button>
+              <button class="action-card" type="button" data-panel="diagnostics-panel">
+                <span class="action-icon">T</span>
+                <strong>Diagnostics & tests</strong>
+                <small>Request CT, MRI, biopsy, and lab slots</small>
+              </button>
+              <button class="action-card" type="button" data-panel="payment-panel">
+                <span class="action-icon">₹</span>
+                <strong data-i18n="payments">Payments</strong>
+                <small data-i18n="paymentsHint">View dues and pay online</small>
+              </button>
+              <button class="action-card" type="button" data-panel="navigation-panel">
+                <span class="action-icon">⌖</span>
+                <strong data-i18n="hospitalMap">Hospital navigation</strong>
+                <small data-i18n="hospitalMapHint">Find OPD, lab, billing, and pharmacy</small>
+              </button>
+              <button class="action-card" type="button" data-panel="token-panel">
+                <span class="action-icon">#</span>
+                <strong>Token & calling</strong>
+                <small>See token series, queue, and room</small>
+              </button>
             </div>
           </div>
 
-          <div class="quick-actions" aria-label="Primary actions">
-            <button class="action-card" type="button" data-panel="appointment-panel">
-              <span class="action-icon">+</span>
-              <strong data-i18n="bookAppointment">Book appointment</strong>
-              <small data-i18n="bookAppointmentHint">Choose OPD day and department</small>
-            </button>
-            <button class="action-card" type="button" data-panel="report-panel">
-              <span class="action-icon">≡</span>
-              <strong data-i18n="sampleStatus">Sample report status</strong>
-              <small data-i18n="sampleStatusHint">Track pathology and imaging updates</small>
-            </button>
-            <button class="action-card" type="button" data-panel="diagnostics-panel">
-              <span class="action-icon">T</span>
-              <strong>Diagnostics & tests</strong>
-              <small>Request CT, MRI, biopsy, and lab slots</small>
-            </button>
-            <button class="action-card" type="button" data-panel="payment-panel">
-              <span class="action-icon">₹</span>
-              <strong data-i18n="payments">Payments</strong>
-              <small data-i18n="paymentsHint">View dues and pay online</small>
-            </button>
-            <button class="action-card" type="button" data-panel="navigation-panel">
-              <span class="action-icon">⌖</span>
-              <strong data-i18n="hospitalMap">Hospital navigation</strong>
-              <small data-i18n="hospitalMapHint">Find OPD, lab, billing, and pharmacy</small>
-            </button>
-            <button class="action-card" type="button" data-panel="token-panel">
-              <span class="action-icon">#</span>
-              <strong>Token & calling</strong>
-              <small>See token series, queue, and room</small>
-            </button>
-            <button class="action-card" type="button" data-panel="assistant-panel">
-              <span class="action-icon">AI</span>
-              <strong>AI care assistant</strong>
-              <small>Ask about CT, MRI, slots, and visit prep</small>
-            </button>
-          </div>
-
-          <div class="dashboard-panel active" id="appointment-panel">
+          <div class="dashboard-panel" id="appointment-panel">
             <div class="panel-title-row">
               <h3 data-i18n="appointments">Appointments</h3>
               <span class="badge">Token AF23</span>
@@ -716,19 +671,12 @@
                 <select id="appointment-category" aria-label="Appointment category">
                   <option>Private</option>
                   <option>General</option>
+                  <option>Preventive oncology</option>
                 </select>
               </label>
               <label>
                 <span>Disease management group</span>
                 <select id="appointment-dmg" aria-label="Disease management group"></select>
-              </label>
-              <label>
-                <span>Discipline</span>
-                <select id="appointment-discipline" aria-label="Discipline">
-                  <option value="SO">Surgical Oncology (SO)</option>
-                  <option value="MO">Medical Oncology (MO)</option>
-                  <option value="RO">Radiation Oncology (RO)</option>
-                </select>
               </label>
               <label>
                 <span>Available OPD day</span>
@@ -752,7 +700,7 @@
             </div>
             <div class="available-days-card">
               <h4>How days are selected</h4>
-              <p>The app filters OPD days using the selected category, disease management group, and discipline. Only valid full-day or half-day options are shown to the patient.</p>
+              <p>The app filters OPD days using the selected category and disease management group. Only valid full-day or half-day options are shown to the patient.</p>
               <div class="schedule-legend">
                 <span><b class="yes-mark">✓</b> Full day</span>
                 <span><b class="half-mark">✓</b> Half day</span>
@@ -797,7 +745,7 @@
 
           <div class="dashboard-panel" id="assistant-panel">
             <div class="panel-title-row">
-              <h3>AI care assistant</h3>
+              <h3>HAPENS AI</h3>
               <span class="badge soft">Mock prototype</span>
             </div>
             <div class="ai-chat-card">
@@ -813,7 +761,7 @@
                 <button type="button" data-chat-prompt="When should I arrive for my OPD appointment?">Arrival time</button>
               </div>
               <form class="chat-compose" id="ai-chat-form">
-                <label class="sr-only" for="ai-chat-input">Ask the AI assistant</label>
+                <label class="sr-only" for="ai-chat-input">Ask HAPENS AI</label>
                 <input id="ai-chat-input" type="text" placeholder="Ask about CT, MRI, appointments..." autocomplete="off" />
                 <button class="primary-btn" type="submit">Send</button>
               </form>
@@ -848,6 +796,18 @@
               <span data-i18n="routeStep2">Take lift to Floor 2</span>
               <span data-i18n="routeStep3">Follow signs to Block B</span>
             </div>
+          </div>
+
+          <div class="floating-assistant">
+            <button class="floating-ai-btn" id="floating-ai-btn" type="button" aria-label="Open HAPENS AI">AI</button>
+            <button class="floating-voice-btn" id="floating-voice-btn" type="button" aria-label="Voice talkback">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Z"></path>
+                <path d="M18 11a6 6 0 0 1-12 0"></path>
+                <path d="M12 17v4"></path>
+                <path d="M9 21h6"></path>
+              </svg>
+            </button>
           </div>
         </section>
       </main>

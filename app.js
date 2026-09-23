@@ -413,6 +413,7 @@ function copyAddress(fromPrefix, toPrefix) {
 }
 
 const weekdays = ["Mon", "Tue", "Wed", "Thur", "Fri"];
+const disciplineKeys = ["SO", "MO", "RO"];
 const disciplineNames = {
   SO: "Surgical Oncology",
   MO: "Medical Oncology",
@@ -468,6 +469,11 @@ const opdSchedule = {
       SO: ["no", "yes", "no", "yes", "no"],
       MO: ["no", "yes", "no", "yes", "no"],
       RO: ["no", "yes", "no", "yes", "no"]
+    },
+    "Preventive oncology": {
+      SO: ["yes", "yes", "yes", "yes", "yes"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["no", "yes", "no", "yes", "no"]
     }
   },
   General: {
@@ -519,6 +525,11 @@ const opdSchedule = {
       SO: ["no", "yes", "no", "yes", "no"],
       MO: ["no", "yes", "no", "yes", "no"],
       RO: ["no", "yes", "no", "yes", "no"]
+    },
+    "Preventive oncology": {
+      SO: ["yes", "yes", "yes", "yes", "yes"],
+      MO: ["yes", "yes", "yes", "yes", "yes"],
+      RO: ["no", "yes", "no", "yes", "no"]
     }
   }
 };
@@ -565,7 +576,7 @@ function markFor(value) {
 function slotText(value) {
   if (value === "yes") return "Full day OPD slot available.";
   if (value === "half") return "Half-day OPD slot available. Check timing note before travel.";
-  return "No OPD slot for this DMG and discipline on the selected day.";
+  return "No OPD slot for this DMG on the selected day.";
 }
 
 function addDays(days) {
@@ -604,45 +615,60 @@ function noteForDiscipline(note, discipline) {
   return segments.filter((segment) => segment.startsWith(discipline)).join(" ");
 }
 
-function availableDayOptions(category, dmg, discipline) {
-  const group = opdSchedule[category]?.[dmg];
-  if (!group?.[discipline]) return [];
-  return group[discipline]
+function scheduleKeyFor(category) {
+  return category === "Preventive oncology" ? "General" : category;
+}
+
+function combinedDayValue(group, dayIndex) {
+  if (!group) return "no";
+  const values = disciplineKeys.map((discipline) => group[discipline]?.[dayIndex] || "no");
+  if (values.includes("yes")) return "yes";
+  if (values.includes("half")) return "half";
+  return "no";
+}
+
+function availableDayOptions(category, dmg) {
+  const group = opdSchedule[scheduleKeyFor(category)]?.[dmg];
+  if (!group) return [];
+  return weekdays
     .map((value, index) => ({
       index,
-      value,
+      value: combinedDayValue(group, index),
       day: weekdays[index],
-      label: `${weekdays[index]} - ${value === "half" ? "Half day" : "Full day"}`
+      label: `${weekdays[index]} - ${combinedDayValue(group, index) === "half" ? "Half day" : "Full day"}`
     }))
     .filter((option) => option.value !== "no");
 }
 
-function getSlot(category, dmg, discipline, dayIndexValue) {
+function getSlot(category, dmg, dayIndexValue) {
   const dayIndex = Number(dayIndexValue);
-  const group = opdSchedule[category]?.[dmg];
-  const value = group?.[discipline]?.[dayIndex] || "no";
+  const group = opdSchedule[scheduleKeyFor(category)]?.[dmg];
+  const value = combinedDayValue(group, dayIndex);
   return {
     value,
     day: weekdays[dayIndex] || "Selected day",
-    note: noteForDiscipline(group?.note || "", discipline),
+    note: group?.note || "",
     text: slotText(value)
   };
 }
 
 function populateDmgSelect(select, category = "Private") {
   if (!select) return;
+  const scheduleKey = scheduleKeyFor(category);
   const selected = select.value;
-  select.innerHTML = Object.keys(opdSchedule[category])
+  select.innerHTML = Object.keys(opdSchedule[scheduleKey])
     .map((dmg) => `<option value="${dmg}">${dmg}</option>`)
     .join("");
-  if (selected && opdSchedule[category][selected]) {
+  if (selected && opdSchedule[scheduleKey][selected]) {
     select.value = selected;
+  } else if (category === "Preventive oncology") {
+    select.value = "Preventive oncology";
   }
 }
 
-function populateDaySelect(select, category, dmg, discipline) {
+function populateDaySelect(select, category, dmg) {
   if (!select) return;
-  const options = availableDayOptions(category, dmg, discipline);
+  const options = availableDayOptions(category, dmg);
   select.disabled = options.length === 0;
   select.innerHTML = options.length
     ? options.map((option) => `<option value="${option.index}">${option.label}</option>`).join("")
@@ -658,17 +684,15 @@ function resetSlotResult(target, message) {
 function refreshPatientDays() {
   const category = document.querySelector("#appointment-category").value;
   const dmg = document.querySelector("#appointment-dmg").value;
-  const discipline = document.querySelector("#appointment-discipline").value;
-  populateDaySelect(document.querySelector("#appointment-day"), category, dmg, discipline);
+  populateDaySelect(document.querySelector("#appointment-day"), category, dmg);
   resetSlotResult(document.querySelector("#patient-slot-result"), "Choose from the available OPD days shown above.");
 }
 
 function refreshAdminDays() {
   const category = document.querySelector("#admin-category-select").value;
   const dmg = document.querySelector("#admin-dmg-select").value;
-  const discipline = document.querySelector("#admin-discipline-select").value;
-  populateDaySelect(document.querySelector("#admin-day-select"), category, dmg, discipline);
-  resetSlotResult(document.querySelector("#admin-slot-result"), "Select a patient, DMG, discipline, and available OPD day.");
+  populateDaySelect(document.querySelector("#admin-day-select"), category, dmg);
+  resetSlotResult(document.querySelector("#admin-slot-result"), "Select a patient, DMG, and available OPD day.");
 }
 
 function renderCallingBoards() {
@@ -864,15 +888,15 @@ function populateAdminControls() {
   populateDmgSelect(dmgSelect, document.querySelector("#admin-category-select")?.value || "General");
 }
 
-function checkSlot({ category, dmg, discipline, dayIndex, target, admin = false }) {
+function checkSlot({ category, dmg, dayIndex, target, admin = false }) {
   if (dayIndex === "") {
     resetSlotResult(target, "Choose an available OPD day to check availability.");
     return;
   }
   setSearching(target, "Searching OPD availability...");
   window.setTimeout(() => {
-    const result = getSlot(category, dmg, discipline, dayIndex);
-    const tokenPrefix = discipline === "SO" ? "SE" : discipline === "MO" ? "ME" : "RO";
+    const result = getSlot(category, dmg, dayIndex);
+    const tokenPrefix = category === "Preventive oncology" ? "PO" : "AF";
     const dateText = formatDate(nextDateForWeekday(dayIndex));
     const timeText = slotTimeFor(result.value);
 
@@ -883,7 +907,7 @@ function checkSlot({ category, dmg, discipline, dayIndex, target, admin = false 
     }
 
     renderConfirmPrompt(target, {
-      title: `${dateText}, ${timeText}: ${disciplineNames[discipline]} · ${category}`,
+      title: `${dateText}, ${timeText}: OPD consultation · ${category}`,
       detail: `
         ${result.text}<br>
         Suggested token series: ${tokenPrefix}. Token opens 1 hour before appointment time.
@@ -919,46 +943,56 @@ document.querySelectorAll("[data-target]").forEach((button) => {
   button.addEventListener("click", () => showScreen(button.dataset.target));
 });
 
+function showDashboardHome() {
+  document.querySelector("#dashboard-home")?.classList.remove("hidden");
+  document.querySelectorAll(".dashboard-panel").forEach((panel) => panel.classList.remove("active"));
+  document.querySelectorAll("[data-panel]").forEach((item) => item.classList.remove("active"));
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function openDashboardPanel(panelId) {
+  document.querySelector("#dashboard-home")?.classList.add("hidden");
+  document.querySelectorAll("[data-panel]").forEach((item) => item.classList.toggle("active", item.dataset.panel === panelId));
+  document.querySelectorAll(".dashboard-panel").forEach((panel) => {
+    panel.classList.toggle("active", panel.id === panelId);
+  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.querySelectorAll(".dashboard-panel").forEach((panel) => {
+  if (!panel.querySelector(".panel-back-btn")) {
+    panel.insertAdjacentHTML("afterbegin", '<button class="panel-back-btn" type="button">Back home</button>');
+  }
+});
+
+document.querySelectorAll(".panel-back-btn").forEach((button) => {
+  button.addEventListener("click", showDashboardHome);
+});
+
 document.querySelector("#login-form").addEventListener("submit", (event) => {
   event.preventDefault();
-  showScreen("deposit-screen");
+  showDashboardHome();
+  showScreen("dashboard-screen");
   showToast("loginToast");
 });
 
 document.querySelector("#register-form").addEventListener("submit", (event) => {
   event.preventDefault();
+  showDashboardHome();
   showScreen("dashboard-screen");
   showToast("registerToast");
 });
 
 document.querySelectorAll("[data-panel]").forEach((button) => {
   button.addEventListener("click", () => {
-    const panelId = button.dataset.panel;
-    document.querySelectorAll("[data-panel]").forEach((item) => item.classList.toggle("active", item === button));
-    document.querySelectorAll(".dashboard-panel").forEach((panel) => {
-      panel.classList.toggle("active", panel.id === panelId);
-    });
+    openDashboardPanel(button.dataset.panel);
   });
-});
-
-document.querySelector("[data-panel='appointment-panel']").classList.add("active");
-
-document.querySelector("#confirm-deposit").addEventListener("click", () => {
-  localStorage.setItem("hapens-deposit-active", "true");
-  showScreen("dashboard-screen");
-  showToast("payToast");
-});
-
-document.querySelector("#demo-skip-deposit").addEventListener("click", () => {
-  localStorage.setItem("hapens-deposit-active", "true");
-  showScreen("dashboard-screen");
 });
 
 document.querySelector("#request-slot").addEventListener("click", () => {
   checkSlot({
     category: document.querySelector("#appointment-category").value,
     dmg: document.querySelector("#appointment-dmg").value,
-    discipline: document.querySelector("#appointment-discipline").value,
     dayIndex: document.querySelector("#appointment-day").value,
     target: document.querySelector("#patient-slot-result")
   });
@@ -996,16 +1030,12 @@ document.querySelector("#appointment-category").addEventListener("change", (even
 
 document.querySelector("#appointment-dmg").addEventListener("change", refreshPatientDays);
 
-document.querySelector("#appointment-discipline").addEventListener("change", refreshPatientDays);
-
 document.querySelector("#admin-category-select").addEventListener("change", (event) => {
   populateDmgSelect(document.querySelector("#admin-dmg-select"), event.target.value);
   refreshAdminDays();
 });
 
 document.querySelector("#admin-dmg-select").addEventListener("change", refreshAdminDays);
-
-document.querySelector("#admin-discipline-select").addEventListener("change", refreshAdminDays);
 
 document.querySelector("#admin-search").addEventListener("input", (event) => {
   renderRegistrations(event.target.value);
@@ -1026,11 +1056,19 @@ document.querySelector("#admin-book-slot").addEventListener("click", () => {
   checkSlot({
     category: document.querySelector("#admin-category-select").value,
     dmg: document.querySelector("#admin-dmg-select").value,
-    discipline: document.querySelector("#admin-discipline-select").value,
     dayIndex: document.querySelector("#admin-day-select").value,
     target: document.querySelector("#admin-slot-result"),
     admin: true
   });
+});
+
+document.querySelector("#floating-ai-btn").addEventListener("click", () => {
+  openDashboardPanel("assistant-panel");
+});
+
+document.querySelector("#floating-voice-btn").addEventListener("click", () => {
+  openDashboardPanel("assistant-panel");
+  appendChatMessage("bot", "Voice talkback mock activated. In the full app, this would listen to the patient and read responses aloud.");
 });
 
 document.querySelector("#admin-book-diagnostic").addEventListener("click", () => {

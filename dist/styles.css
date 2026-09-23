@@ -485,6 +485,15 @@ label {
   background: linear-gradient(135deg, #ffffff 0%, #f3faf8 100%);
 }
 
+.dashboard-home {
+  display: grid;
+  gap: 1rem;
+}
+
+.dashboard-home.hidden {
+  display: none;
+}
+
 .patient-status-stack {
   display: grid;
   gap: 0.4rem;
@@ -576,6 +585,18 @@ label {
 .dashboard-panel.active {
   display: grid;
   gap: 0.9rem;
+}
+
+.panel-back-btn {
+  justify-self: start;
+  border: 1px solid rgba(11, 97, 94, 0.22);
+  border-radius: 99px;
+  background: #fff;
+  color: var(--brand);
+  font-size: 0.82rem;
+  font-weight: 850;
+  min-height: 2.35rem;
+  padding: 0 0.8rem;
 }
 
 .panel-title-row {
@@ -885,6 +906,47 @@ label {
 
 .chat-compose .primary-btn {
   min-height: 2.75rem;
+}
+
+.floating-assistant {
+  position: sticky;
+  bottom: 1rem;
+  z-index: 20;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  pointer-events: none;
+}
+
+.floating-ai-btn,
+.floating-voice-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 3.15rem;
+  height: 3.15rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  font-weight: 950;
+  box-shadow: 0 16px 34px rgba(11, 97, 94, 0.26);
+  pointer-events: auto;
+}
+
+.floating-voice-btn {
+  background: #fff;
+  color: var(--brand);
+  border: 1px solid rgba(11, 97, 94, 0.22);
+}
+
+.floating-voice-btn svg {
+  width: 1.35rem;
+  height: 1.35rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .diagnostic-list,
