@@ -316,6 +316,15 @@ label {
   color: var(--brand);
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
 .split-action {
   display: flex;
   align-items: center;
@@ -762,6 +771,87 @@ label {
   font-size: 1.2rem;
   font-weight: 950;
   padding: 0.5rem 0.7rem;
+}
+
+.ai-chat-card {
+  display: grid;
+  gap: 0.8rem;
+  border: 1px solid rgba(217, 232, 229, 0.9);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.94);
+  padding: 0.85rem;
+  box-shadow: 0 10px 28px rgba(23, 51, 50, 0.06);
+}
+
+.ai-chat-log {
+  display: grid;
+  gap: 0.65rem;
+  max-height: 22rem;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+.chat-message {
+  width: min(92%, 27rem);
+  border-radius: 1rem;
+  padding: 0.75rem 0.85rem;
+  line-height: 1.42;
+}
+
+.chat-message strong {
+  display: block;
+  margin-bottom: 0.18rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.chat-message p {
+  margin: 0;
+}
+
+.chat-message.bot {
+  justify-self: start;
+  border: 1px solid rgba(217, 232, 229, 0.95);
+  background: #f6fbfa;
+  color: var(--ink);
+}
+
+.chat-message.user {
+  justify-self: end;
+  background: var(--brand);
+  color: #fff;
+}
+
+.suggestion-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.suggestion-row button {
+  border: 1px solid rgba(11, 97, 94, 0.24);
+  border-radius: 99px;
+  background: #fff;
+  color: var(--brand);
+  font-size: 0.78rem;
+  font-weight: 850;
+  padding: 0.48rem 0.7rem;
+}
+
+.chat-compose {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.chat-compose input {
+  min-width: 0;
+}
+
+.chat-compose .primary-btn {
+  min-height: 2.75rem;
 }
 
 .progress-list {

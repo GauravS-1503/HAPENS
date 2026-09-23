@@ -535,6 +535,12 @@ const callingRooms = [
   { room: "Room 21", clinic: "Radiation Oncology", token: "RO07", series: "RO06 completed" }
 ];
 
+const imagingSlots = [
+  { test: "CT scan", day: "Tomorrow", time: "09:30 AM", place: "Imaging Block, Ground Floor" },
+  { test: "MRI", day: "Tomorrow", time: "02:15 PM", place: "MRI Suite, Block B" },
+  { test: "CT + MRI", day: "Friday", time: "10:45 AM", place: "Imaging reception, Block B" }
+];
+
 function markFor(value) {
   if (value === "yes") return '<b class="yes-mark">✓</b>';
   if (value === "half") return '<b class="half-mark">✓</b>';
@@ -655,6 +661,67 @@ function renderRegistrations(filter = "") {
     .join("");
 }
 
+function escapeHtml(value) {
+  return value.replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[character]);
+}
+
+function appendChatMessage(role, message) {
+  const log = document.querySelector("#ai-chat-log");
+  if (!log) return;
+  log.insertAdjacentHTML("beforeend", `
+    <div class="chat-message ${role}">
+      <strong>${role === "user" ? "You" : "HAPENS AI"}</strong>
+      <p>${message}</p>
+    </div>
+  `);
+  log.scrollTop = log.scrollHeight;
+}
+
+function aiResponseFor(prompt) {
+  const text = prompt.toLowerCase();
+  const mentionsImaging = text.includes("ct") || text.includes("mri") || text.includes("scan") || text.includes("imaging");
+  const wantsBooking = text.includes("book") || text.includes("slot") || text.includes("schedule");
+  const confirmsSlot = text.includes("confirm") || text.includes("yes") || text.includes("book it");
+
+  if (confirmsSlot || text.includes("friday")) {
+    return "Demo booking confirmed for CT + MRI on Friday at 10:45 AM. Please report to Imaging reception, Block B, 30 minutes early with the referral note and patient ID.";
+  }
+
+  if (mentionsImaging && wantsBooking) {
+    const slots = imagingSlots
+      .map((slot) => `${slot.test}: ${slot.day}, ${slot.time} at ${slot.place}`)
+      .join("<br>");
+    return `I found these investigation slots for your profile:<br>${slots}<br><br>Reply with "confirm Friday" to reserve the combined CT + MRI slot in this demo.`;
+  }
+
+  if (text.includes("document") || text.includes("carry") || text.includes("prep")) {
+    return "For imaging, please carry your patient ID, doctor's prescription or referral note, prior reports, payment receipt if already paid, and any allergy or implant information.";
+  }
+
+  if (text.includes("arrive") || text.includes("arrival") || text.includes("opd")) {
+    return "For OPD, please arrive within 1 hour of your appointment time. Your token opens 1 hour before the appointment and will be called by series on the display screen.";
+  }
+
+  if (text.includes("payment") || text.includes("pay")) {
+    return "You can review pending dues in Payments. In this prototype, payment is a placeholder; the real app would connect to hospital billing and receipt storage.";
+  }
+
+  return "I can help with CT/MRI slot requests, OPD appointment guidance, documents to carry, payment status, and hospital navigation. Try asking: I have been told to do CT MRI, can you book a slot?";
+}
+
+function handleChatPrompt(prompt) {
+  const trimmed = prompt.trim();
+  if (!trimmed) return;
+  appendChatMessage("user", escapeHtml(trimmed));
+  window.setTimeout(() => appendChatMessage("bot", aiResponseFor(trimmed)), 220);
+}
+
 function populateAdminControls() {
   const patientSelect = document.querySelector("#admin-patient-select");
   const dmgSelect = document.querySelector("#admin-dmg-select");
@@ -731,6 +798,22 @@ document.querySelector("#request-slot").addEventListener("click", () => {
 });
 
 document.querySelector("[data-i18n='payNow']").addEventListener("click", () => showToast("payToast"));
+
+document.querySelector("#ai-chat-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  const input = document.querySelector("#ai-chat-input");
+  handleChatPrompt(input.value);
+  input.value = "";
+});
+
+document.querySelectorAll("[data-chat-prompt]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const input = document.querySelector("#ai-chat-input");
+    input.value = button.dataset.chatPrompt;
+    handleChatPrompt(input.value);
+    input.value = "";
+  });
+});
 
 document.querySelector("#appointment-category").addEventListener("change", (event) => {
   populateDmgSelect(document.querySelector("#appointment-dmg"), event.target.value);

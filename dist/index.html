@@ -664,6 +664,11 @@
               <strong>Token & calling</strong>
               <small>See token series, queue, and room</small>
             </button>
+            <button class="action-card" type="button" data-panel="assistant-panel">
+              <span class="action-icon">AI</span>
+              <strong>AI care assistant</strong>
+              <small>Ask about CT, MRI, slots, and visit prep</small>
+            </button>
           </div>
 
           <div class="dashboard-panel active" id="appointment-panel">
@@ -736,6 +741,31 @@
               <h4>Your visit guidance</h4>
               <p>Carry the appointment slip or confirmation message at the entrance gate. Please avoid reaching OPD more than 1 hour before the appointment time to reduce waiting-area congestion.</p>
               <p>WhatsApp booking is message-only. Do not make voice or video calls to the appointment number.</p>
+            </div>
+          </div>
+
+          <div class="dashboard-panel" id="assistant-panel">
+            <div class="panel-title-row">
+              <h3>AI care assistant</h3>
+              <span class="badge soft">Mock prototype</span>
+            </div>
+            <div class="ai-chat-card">
+              <div class="ai-chat-log" id="ai-chat-log" aria-live="polite">
+                <div class="chat-message bot">
+                  <strong>HAPENS AI</strong>
+                  <p>Namaste Asha. I can help with investigation slot requests, appointment guidance, payments, and hospital navigation. For urgent symptoms, please contact hospital staff directly.</p>
+                </div>
+              </div>
+              <div class="suggestion-row" aria-label="Suggested questions">
+                <button type="button" data-chat-prompt="I have been told to do CT and MRI. Can you book a slot?">CT + MRI slot</button>
+                <button type="button" data-chat-prompt="What documents should I carry for imaging?">Imaging documents</button>
+                <button type="button" data-chat-prompt="When should I arrive for my OPD appointment?">Arrival time</button>
+              </div>
+              <form class="chat-compose" id="ai-chat-form">
+                <label class="sr-only" for="ai-chat-input">Ask the AI assistant</label>
+                <input id="ai-chat-input" type="text" placeholder="Ask about CT, MRI, appointments..." autocomplete="off" />
+                <button class="primary-btn" type="submit">Send</button>
+              </form>
             </div>
           </div>
 
