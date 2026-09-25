@@ -2,6 +2,7 @@
 .openai/
 .codex-build/
 .codex-finalizer/
+.codex-output/
 ~$*.pptx
 .DS_Store
 Thumbs.db
