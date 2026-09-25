@@ -1,3 +1,7 @@
 .sites-runtime/
+.openai/
+.codex-build/
+.codex-finalizer/
+~$*.pptx
 .DS_Store
 Thumbs.db

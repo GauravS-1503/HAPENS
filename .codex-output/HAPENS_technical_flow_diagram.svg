@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">HAPENS technical architecture flow diagram</title>
+  <desc id="desc">A technical flow diagram showing patient and staff access, secure network entry, FastAPI backend services, PostgreSQL and ChromaDB data services, local Ollama AI inference, and hospital operations integrations.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f5fbfa; }
+      .title { font: 700 44px Arial, sans-serif; fill: #073b3a; letter-spacing: .5px; }
+      .subtitle { font: 400 22px Arial, sans-serif; fill: #426462; }
+      .lane-title { font: 700 19px Arial, sans-serif; fill: #073b3a; }
+      .node-title { font: 700 20px Arial, sans-serif; fill: #073b3a; }
+      .node-text { font: 400 16px Arial, sans-serif; fill: #2f4f4d; }
+      .small { font: 400 14px Arial, sans-serif; fill: #466966; }
+      .stack { font: 700 17px Arial, sans-serif; fill: #0b615e; }
+      .tag { font: 700 14px Arial, sans-serif; fill: #ffffff; }
+      .card { fill: #ffffff; stroke: #b9d8d5; stroke-width: 2; }
+      .card-soft { fill: #ebf7f4; stroke: #91c7c2; stroke-width: 2; }
+      .card-ai { fill: #eef4ff; stroke: #8fb1e8; stroke-width: 2; }
+      .card-data { fill: #fff8e8; stroke: #e0c66f; stroke-width: 2; }
+      .pill { fill: #0b615e; }
+      .pill-alt { fill: #1d75a3; }
+      .arrow { fill: none; stroke: #0b615e; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrowhead); }
+      .arrow-soft { fill: none; stroke: #7aa9a5; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrowhead-soft); }
+      .divider { stroke: #d5e7e5; stroke-width: 2; stroke-dasharray: 7 9; }
+    </style>
+    <marker id="arrowhead" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#0b615e"/>
+    </marker>
+    <marker id="arrowhead-soft" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#7aa9a5"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0b615e" flood-opacity=".12"/>
+    </filter>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1600" height="900"/>
+  <text class="title" x="70" y="78">HAPENS Technical Flow</text>
+  <text class="subtitle" x="70" y="116">Healthcare Access, Patient Enrolment and Navigation System | on-premise public oncology center deployment</text>
+  <rect class="pill" x="1240" y="50" width="285" height="40" rx="20"/>
+  <text class="tag" x="1270" y="75">Zero cloud PHI dependency</text>
+
+  <line class="divider" x1="300" y1="160" x2="300" y2="785"/>
+  <line class="divider" x1="585" y1="160" x2="585" y2="785"/>
+  <line class="divider" x1="900" y1="160" x2="900" y2="785"/>
+  <line class="divider" x1="1195" y1="160" x2="1195" y2="785"/>
+
+  <text class="lane-title" x="70" y="176">1. Access Layer</text>
+  <text class="lane-title" x="335" y="176">2. Secure Entry</text>
+  <text class="lane-title" x="620" y="176">3. Backend Services</text>
+  <text class="lane-title" x="935" y="176">4. Data + AI Layer</text>
+  <text class="lane-title" x="1230" y="176">5. Hospital Operations</text>
+
+  <g filter="url(#shadow)">
+    <rect class="card" x="60" y="215" width="200" height="124" rx="18"/>
+    <text class="node-title" x="88" y="255">Patient app</text>
+    <text class="node-text" x="88" y="286">Mobile web / PWA</text>
+    <text class="small" x="88" y="313">HTML5, CSS3, JS</text>
+
+    <rect class="card" x="60" y="365" width="200" height="124" rx="18"/>
+    <text class="node-title" x="88" y="405">Admin console</text>
+    <text class="node-text" x="88" y="436">Staff registration,</text>
+    <text class="node-text" x="88" y="462">slot and token control</text>
+
+    <rect class="card" x="60" y="515" width="200" height="124" rx="18"/>
+    <text class="node-title" x="88" y="555">Displays / kiosk</text>
+    <text class="node-text" x="88" y="586">Token calling screen</text>
+    <text class="small" x="88" y="613">OPD waiting areas</text>
+
+    <rect class="card-soft" x="340" y="280" width="205" height="178" rx="18"/>
+    <text class="node-title" x="370" y="320">Intranet / DMZ</text>
+    <text class="node-text" x="370" y="354">Hospital VLAN</text>
+    <text class="node-text" x="370" y="382">Nginx reverse proxy</text>
+    <text class="node-text" x="370" y="410">Rate limiting</text>
+    <text class="small" x="370" y="438">Optional tunnel for demo</text>
+
+    <rect class="card-soft" x="625" y="215" width="225" height="430" rx="22"/>
+    <text class="node-title" x="655" y="255">FastAPI backend</text>
+    <text class="node-text" x="655" y="290">Gunicorn + Uvicorn</text>
+    <text class="small" x="655" y="318">Ubuntu Server 24.04</text>
+    <line x1="655" y1="342" x2="820" y2="342" stroke="#cfe3e0" stroke-width="2"/>
+    <text class="node-text" x="655" y="378">Auth + registration</text>
+    <text class="node-text" x="655" y="412">Appointments + tokens</text>
+    <text class="node-text" x="655" y="446">Diagnostics workflow</text>
+    <text class="node-text" x="655" y="480">Reports + downloads</text>
+    <text class="node-text" x="655" y="514">Payments status</text>
+    <text class="node-text" x="655" y="548">Hospital navigation API</text>
+    <text class="node-text" x="655" y="582">Admin operations API</text>
+    <rect class="pill" x="655" y="604" width="142" height="30" rx="15"/>
+    <text class="tag" x="677" y="624">Node 2: App VM</text>
+
+    <rect class="card-data" x="940" y="215" width="225" height="155" rx="18"/>
+    <text class="node-title" x="970" y="254">PostgreSQL</text>
+    <text class="node-text" x="970" y="286">Patients, queues,</text>
+    <text class="node-text" x="970" y="314">appointments, reports,</text>
+    <text class="node-text" x="970" y="342">transactions</text>
+
+    <rect class="card-data" x="940" y="398" width="225" height="122" rx="18"/>
+    <text class="node-title" x="970" y="437">Document store</text>
+    <text class="node-text" x="970" y="468">Referral letters, IDs,</text>
+    <text class="node-text" x="970" y="496">reports and receipts</text>
+
+    <rect class="card-ai" x="940" y="548" width="225" height="147" rx="18"/>
+    <text class="node-title" x="970" y="586">Local AI / RAG</text>
+    <text class="node-text" x="970" y="618">Ollama + Gemma 3:4B</text>
+    <text class="node-text" x="970" y="646">ChromaDB HNSW vectors</text>
+    <text class="small" x="970" y="674">Multilingual guidance</text>
+
+    <rect class="card" x="1240" y="215" width="260" height="115" rx="18"/>
+    <text class="node-title" x="1270" y="254">OPD scheduling</text>
+    <text class="node-text" x="1270" y="286">DMG days, category,</text>
+    <text class="node-text" x="1270" y="312">token series SE/ME/AF/RO</text>
+
+    <rect class="card" x="1240" y="360" width="260" height="115" rx="18"/>
+    <text class="node-title" x="1270" y="399">Lab / radiology</text>
+    <text class="node-text" x="1270" y="431">CT, MRI, biopsy, blood</text>
+    <text class="node-text" x="1270" y="457">sample status updates</text>
+
+    <rect class="card" x="1240" y="505" width="260" height="115" rx="18"/>
+    <text class="node-title" x="1270" y="544">Messaging</text>
+    <text class="node-text" x="1270" y="576">WhatsApp, email, SMS</text>
+    <text class="node-text" x="1270" y="602">confirmations and alerts</text>
+
+    <rect class="card" x="1240" y="650" width="260" height="115" rx="18"/>
+    <text class="node-title" x="1270" y="689">Billing / payments</text>
+    <text class="node-text" x="1270" y="721">Deposits, receipts,</text>
+    <text class="node-text" x="1270" y="747">transaction status</text>
+  </g>
+
+  <path class="arrow" d="M260 277 C295 277 305 333 340 333"/>
+  <path class="arrow-soft" d="M260 427 C300 427 305 383 340 383"/>
+  <path class="arrow-soft" d="M260 577 C302 577 307 428 340 428"/>
+  <path class="arrow" d="M545 369 C580 369 590 365 625 365"/>
+  <path class="arrow" d="M850 332 C890 332 900 292 940 292"/>
+  <path class="arrow-soft" d="M850 458 C890 458 900 458 940 458"/>
+  <path class="arrow" d="M850 558 C890 558 900 622 940 622"/>
+  <path class="arrow-soft" d="M1165 292 C1195 292 1210 272 1240 272"/>
+  <path class="arrow-soft" d="M1165 458 C1195 458 1210 418 1240 418"/>
+  <path class="arrow-soft" d="M1165 622 C1195 622 1210 562 1240 562"/>
+  <path class="arrow-soft" d="M850 516 C1030 516 1060 708 1240 708"/>
+
+  <rect class="card-soft" x="80" y="800" width="1440" height="70" rx="18"/>
+  <text class="stack" x="110" y="829">Stack:</text>
+  <text class="node-text" x="170" y="829">HTML/CSS/JavaScript PWA · Nginx · Python 3.11 FastAPI · Gunicorn/Uvicorn · PostgreSQL + SQLAlchemy · ChromaDB</text>
+  <text class="node-text" x="170" y="856">Ollama/Gemma 3:4B · Ubuntu Server on Proxmox/VMware · isolated hospital VLAN · on-prem two-node rack deployment</text>
+</svg>

@@ -784,6 +784,14 @@
 
           <div class="dashboard-panel" id="navigation-panel">
             <h3 data-i18n="navigationTitle">Hospital navigation</h3>
+            <div class="nav-status-card">
+              <div>
+                <span class="eyebrow">QR / geotag checkpoint</span>
+                <strong>Main building lobby verified</strong>
+                <p>Prototype shows calibrated indoor routing. Live positioning will use QR checkpoints first, with future Bluetooth or Wi-Fi positioning support.</p>
+              </div>
+              <span class="geo-chip">Accuracy ±3 m</span>
+            </div>
             <div class="map-card" aria-label="Hospital department map">
               <div class="map-node start" data-i18n="entrance">Entrance</div>
               <div class="map-path"></div>
@@ -791,10 +799,42 @@
               <div class="map-path"></div>
               <div class="map-node target" data-i18n="opd">Oncology OPD</div>
             </div>
+            <div class="geo-route-card" aria-label="Calibrated hospital route preview">
+              <div class="route-header">
+                <div>
+                  <span class="eyebrow">Route preview</span>
+                  <strong>Main Building → Radiology CT/MRI</strong>
+                </div>
+                <span class="badge soft">6 min walk</span>
+              </div>
+              <div class="indoor-map-mock">
+                <div class="building-zone zone-start">Main lobby</div>
+                <div class="building-zone">Bridge corridor</div>
+                <div class="building-zone zone-target">Radiology block</div>
+                <div class="direction-arrow arrow-one">➜</div>
+                <div class="direction-arrow arrow-two">⬆</div>
+                <div class="direction-arrow arrow-three">➜</div>
+                <div class="position-dot" aria-label="Current calibrated position"></div>
+              </div>
+              <div class="qr-calibration">
+                <div class="qr-mock" aria-label="Mock checkpoint QR code">
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                </div>
+                <div>
+                  <strong>Scan checkpoint QR</strong>
+                  <p>Patient scans a posted QR code at the lobby, lift, corridor, or department to confirm “You are here”.</p>
+                  <button class="secondary-btn compact-btn" type="button" id="mock-geotag-scan">Mock scan checkpoint</button>
+                </div>
+              </div>
+            </div>
             <div class="route-list">
-              <span data-i18n="routeStep1">Enter through Gate 2</span>
-              <span data-i18n="routeStep2">Take lift to Floor 2</span>
-              <span data-i18n="routeStep3">Follow signs to Block B</span>
+              <span>1. Start at verified QR checkpoint: Main Building lobby</span>
+              <span>2. Walk straight to the blue bridge corridor</span>
+              <span>3. Turn right after pharmacy and follow Radiology signs</span>
+              <span>4. Scan the CT/MRI desk QR to close navigation</span>
             </div>
           </div>
 

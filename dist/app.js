@@ -58,6 +58,7 @@ const translations = {
     loginToast: "Logged in with demo patient profile.",
     registerToast: "Registration saved for demo review.",
     slotToast: "Appointment slot requested.",
+    geotagToast: "Checkpoint scanned. Current location calibrated to Main Building lobby.",
     payToast: "Payment gateway placeholder opened."
   },
   hi: {
@@ -865,6 +866,10 @@ function aiResponseFor(prompt) {
     return "For OPD, please arrive within 1 hour of your appointment time. Your token opens 1 hour before the appointment and will be called by series on the display screen.";
   }
 
+  if (text.includes("direction") || text.includes("navigate") || text.includes("navigation") || text.includes("where") || text.includes("radiology")) {
+    return "For this demo, navigation uses calibrated QR/geotag checkpoints. Scan the lobby QR to set your current location, then follow the route arrows: Main Building lobby → bridge corridor → Radiology block → CT/MRI desk.";
+  }
+
   if (text.includes("payment") || text.includes("pay")) {
     return "You can review pending dues in Payments. In this prototype, payment is a placeholder; the real app would connect to hospital billing and receipt storage.";
   }
@@ -1006,6 +1011,8 @@ document.querySelector("#request-diagnostic").addEventListener("click", () => {
 });
 
 document.querySelector("[data-i18n='payNow']").addEventListener("click", () => showToast("payToast"));
+
+document.querySelector("#mock-geotag-scan")?.addEventListener("click", () => showToast("geotagToast"));
 
 document.querySelector("#ai-chat-form").addEventListener("submit", (event) => {
   event.preventDefault();
